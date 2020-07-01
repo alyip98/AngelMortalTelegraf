@@ -26,8 +26,11 @@ async function LoadCommand(path) {
 
     const model = new Model();
     content.split("\n").forEach(line => {
-        const person = new Person().withName(line.trim())
-        model.addPerson(person)
+        const name = line.trim()
+        if (name!=="") {
+            const person = new Person().withName(line.trim())
+            model.addPerson(person)
+        }
     })
     model.generateUuids()
     model.setupAMRefs()
