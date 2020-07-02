@@ -3,11 +3,11 @@ async function TryRegister(ctx, uuid) {
     const model = ctx.model;
     const person = model.getPersonByUuid(uuid)
     if (!person) {
-        await ctx.reply(`invalid code ${uuid}`)
+        // await ctx.reply(`invalid code ${uuid}`)
         return false
     }
     if (person.isRegistered()) {
-        await ctx.reply('user already registered')
+        // await ctx.reply('user already registered')
         return false
     }
     person.register(ctx.from.id)
@@ -18,7 +18,6 @@ async function TryRegister(ctx, uuid) {
 }
 
 RegisterHandler = async (ctx) => {
-    console.log(ctx.message.text);
     if (ctx.person) {
         return ctx.reply(`already registered as ${ctx.person.name}`)
     }
@@ -40,7 +39,6 @@ DeregisterHandler = async (ctx) => {
     model.saveToStorage()
     await ctx.reply(`successfully deregistered`)
 }
-
 
 MessageHandler = async (ctx) => {
     const target = ctx.isAngel ? ctx.angel : ctx.mortal
@@ -75,6 +73,8 @@ HelpHandler = async (ctx) => {
     ctx.reply(`help stub`)
 }
 
+StartHandler = async (ctx) => {
+    ctx.reply(`start stub`)
+}
 
-
-module.exports = {RegisterHandler, DeregisterHandler, StatusHandler, TryRegister, MessageHandler, HelpHandler, StickerHandler}
+module.exports = {RegisterHandler, DeregisterHandler, StatusHandler, TryRegister, MessageHandler, HelpHandler, StickerHandler, StartHandler}

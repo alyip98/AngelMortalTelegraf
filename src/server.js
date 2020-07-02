@@ -16,23 +16,25 @@ async function start(model) {
     model.mortalBot = mortalBot;
 
     angelBot.use(Middleware.Settings(true, mortalBot))
+    angelBot._name = "AngelBot"
     mortalBot.use(Middleware.Settings(false, angelBot))
-    
+    mortalBot._name = "MortalBot"
+
     const bots = [angelBot, mortalBot]
 
     bots.forEach(bot => {
+        // bot.use(Telegraf.log(console.log)) // development use, todo remove before going live
         bot.use(Middleware.WithModel(model), Middleware.ErrorHandler, Middleware.OnlyPrivate, Middleware.UserId);
+        bot.start(Commands.StartHandler)
         bot.help(Commands.HelpHandler)
         bot.command(['register', 'r'], Commands.RegisterHandler)
         bot.use(Middleware.RequireRegister)
         bot.command(['deregister', 'd'], Commands.DeregisterHandler)
         bot.command('status', Commands.StatusHandler)
         bot.on('sticker', Commands.StickerHandler)
-        bot.on('message', Commands.MessageHandler);
-        bot.launch()
+        bot.on('message', Commands.MessageHandler)
+        bot.launch().then(() => console.log(bot._name + " started")).catch(console.error)
     })
-
-    console.log("Bots started")
 }
 
 module.exports = {start};

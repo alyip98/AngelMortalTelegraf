@@ -3,7 +3,7 @@ const {Person} = require('./model');
 
 WithModel = (model) => async (ctx, next) => {
     ctx.model = model
-    next()
+    await next()
 }
 
 UserId = async (ctx, next) => {
@@ -63,6 +63,8 @@ Settings = (isAngel=true, otherBot) => async(ctx, next) => {
     ctx.otherBot = otherBot
     ctx._name = isAngel ? "Angel" : "Mortal"
     ctx._otherName = isAngel ? "Mortal" : "Angel"
+
+    await next()
 }
 
 module.exports = {UserId, OnlyPrivate, ErrorHandler, RequireRegister, WithModel, Settings}
