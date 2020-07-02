@@ -84,6 +84,18 @@ PhotoHandler = async (ctx) => {
     }
 }
 
+VideoHandler = async (ctx) => {
+    console.log(ctx.video)
+    const video = ctx.message.video
+    const target = ctx.isAngel ? ctx.angel : ctx.mortal
+    if (target.isRegistered()) {
+        const fileLink = await ctx.telegram.getFileLink(video.file_id)
+        await ctx.otherBot.telegram.sendVideo(target.telegramId, {url: fileLink})
+    } else {
+        await ctx.reply(`It seems that your ${ctx._name.toLowerCase()} hasn't registered with the bot on Telegram, we can't deliver your message to them. Don't worry, we'll let you know as soon as they are registered!`)
+    }
+}
+
 StatusHandler = async (ctx) => {
     const person = ctx.person
     const model = ctx.model
@@ -98,7 +110,6 @@ StartHandler = async (ctx) => {
     ctx.reply(`start stub`)
 }
 
-
 module.exports = {
     RegisterHandler,
     DeregisterHandler,
@@ -108,5 +119,6 @@ module.exports = {
     HelpHandler,
     StickerHandler,
     StartHandler,
-    PhotoHandler
+    PhotoHandler,
+    VideoHandler
 }
