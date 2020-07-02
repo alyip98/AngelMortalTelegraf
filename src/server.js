@@ -10,47 +10,29 @@ async function start(model) {
         // model = new Model();
 
     const angelBot = new Telegraf(process.env.ANGEL_BOT_TOKEN);
-    angelBot.use(Middleware.WithModel(model), Middleware.ErrorHandler, Middleware.OnlyPrivate, Middleware.UserId);
-    angelBot.help(Commands.HelpHandler)
-    angelBot.command(['register', 'r'], Commands.RegisterHandler)
-    angelBot.use(Middleware.RequireRegister)
-    angelBot.command(['deregister', 'd'], Commands.DeregisterHandler)
-    angelBot.command('status', Commands.StatusHandler)
-    angelBot.on('sticker', async (ctx) => {
-        console.log(ctx)
-        console.log(ctx.message)
-        let msg = await ctx.reply("sticker!")
-        await ctx.replyWithSticker('CAACAgQAAxkBAAIEfV78mvoS4SvBDMxhdHom_Yggx-UJAAJLCQACS2nuEB2AzJJszEcJGgQ')
-        setTimeout(() => {
-            ctx.deleteMessage(msg.message_id)
-        }, 3000)
-    })
-    angelBot.on('message', Commands.AngelMessageHandler);
-
     const mortalBot = new Telegraf(process.env.MORTAL_BOT_TOKEN);
-    mortalBot.use(Middleware.WithModel(model), Middleware.ErrorHandler, Middleware.OnlyPrivate, Middleware.UserId);
-    mortalBot.help(Commands.HelpHandler)
-    mortalBot.command(['register', 'r'], Commands.RegisterHandler)
-    mortalBot.use(Middleware.RequireRegister)
-    mortalBot.command(['deregister', 'd'], Commands.DeregisterHandler)
-    mortalBot.command('status', Commands.StatusHandler)
-    mortalBot.on('sticker', async (ctx) => {
-        console.log(ctx)
-        console.log(ctx.message)
-        let msg = await ctx.reply("sticker!")
-        await ctx.replyWithSticker('CAACAgQAAxkBAAIEfV78mvoS4SvBDMxhdHom_Yggx-UJAAJLCQACS2nuEB2AzJJszEcJGgQ')
-        setTimeout(() => {
-            ctx.deleteMessage(msg.message_id)
-        }, 3000)
-    })
-    mortalBot.on('message', Commands.MortalMessageHandler);
 
     model.angelBot = angelBot;
     model.mortalBot = mortalBot;
 
+    angelBot.use(Middleware.Settings(true, mortalBot))
+    mortalBot.use(Middleware.Settings(false, angelBot))
+    
+    const bots = [angelBot, mortalBot]
+
+    bots.forEach(bot => {
+        bot.use(Middleware.WithModel(model), Middleware.ErrorHandler, Middleware.OnlyPrivate, Middleware.UserId);
+        bot.help(Commands.HelpHandler)
+        bot.command(['register', 'r'], Commands.RegisterHandler)
+        bot.use(Middleware.RequireRegister)
+        bot.command(['deregister', 'd'], Commands.DeregisterHandler)
+        bot.command('status', Commands.StatusHandler)
+        bot.on('sticker', Commands.StickerHandler)
+        bot.on('message', Commands.MessageHandler);
+        bot.launch()
+    })
+
     console.log("Bots started")
-    angelBot.launch();
-    mortalBot.launch();
 }
 
 module.exports = {start};

@@ -41,32 +41,27 @@ DeregisterHandler = async (ctx) => {
     await ctx.reply(`successfully deregistered`)
 }
 
-async function CommonHandler(ctx) {
-    const person = ctx.person
-    console.log(`incoming message from ${person.name}`)
-    console.log(ctx.message.text)
-    console.log(person)
-}
 
-AngelMessageHandler = async (ctx) => {
-    CommonHandler(ctx)
-    if (ctx.mortal.isRegistered()) {
-        console.log('forwarding to mortal')
-        await ctx.model.mortalBot.telegram.sendMessage(ctx.mortal.telegramId, ctx.message.text)
-        // await ctx.telegram.sendMessage(ctx.mortal.telegramId, ctx.message.text)
+MessageHandler = async (ctx) => {
+    const target = ctx.isAngel ? ctx.angel : ctx.mortal
+    if (target.isRegistered()) {
+        await ctx.otherBot.telegram.sendMessage(target.telegramId, ctx.message.text)
     } else {
-        await ctx.reply(`It seems that your mortal hasn't registered with the bot on Telegram, we can't deliver your message to them. Don't worry, we'll let you know as soon as they are registered!`)
+        await ctx.reply(`It seems that your ${ctx._name.toLowerCase()} hasn't registered with the bot on Telegram, we can't deliver your message to them. Don't worry, we'll let you know as soon as they are registered!`)
     }
 }
 
-MortalMessageHandler = async (ctx) => {
-    CommonHandler(ctx)
-    if (ctx.angel.isRegistered()) {
-        console.log('forwarding to angel')
-        await ctx.model.angelBot.telegram.sendMessage(ctx.angel.telegramId, ctx.message.text)
-        // await ctx.telegram.sendMessage(ctx.angel.telegramId, ctx.message.text)
+StickerHandler = async(ctx) => {
+    console.log(ctx)
+    console.log(ctx.message)
+    let msg = await ctx.reply("sticker!")
+    await ctx.replyWithSticker('CAACAgQAAxkBAAIEfV78mvoS4SvBDMxhdHom_Yggx-UJAAJLCQACS2nuEB2AzJJszEcJGgQ')
+
+    const target = ctx.isAngel ? ctx.angel : ctx.mortal
+    if (target.isRegistered()) {
+        await ctx.otherBot.telegram.sendSticker(target.telegramId, ctx.message.text)
     } else {
-        await ctx.reply(`It seems that your angel hasn't registered with the bot on Telegram, we can't deliver your message to them. Don't worry, we'll let you know as soon as they are registered!`)
+        await ctx.reply(`It seems that your ${ctx._name.toLowerCase()} hasn't registered with the bot on Telegram, we can't deliver your message to them. Don't worry, we'll let you know as soon as they are registered!`)
     }
 }
 
@@ -82,4 +77,4 @@ HelpHandler = async (ctx) => {
 
 
 
-module.exports = {RegisterHandler, DeregisterHandler, StatusHandler, TryRegister, AngelMessageHandler, MortalMessageHandler, HelpHandler}
+module.exports = {RegisterHandler, DeregisterHandler, StatusHandler, TryRegister, MessageHandler, HelpHandler, StickerHandler}
