@@ -75,10 +75,11 @@ StickerHandler = async (ctx) => {
 
 PhotoHandler = async (ctx) => {
     const photos = ctx.message.photo
+    const caption = ctx.message.caption || ""
     const target = ctx.isAngel ? ctx.angel : ctx.mortal
     if (target.isRegistered()) {
         const fileLink = await ctx.telegram.getFileLink(photos[0].file_id)
-        await ctx.otherBot.telegram.sendPhoto(target.telegramId, {url: fileLink})
+        await ctx.otherBot.telegram.sendPhoto(target.telegramId, {url: fileLink}, {caption})
     } else {
         await ctx.reply(`It seems that your ${ctx._name.toLowerCase()} hasn't registered with the bot on Telegram, we can't deliver your message to them. Don't worry, we'll let you know as soon as they are registered!`)
     }
@@ -87,10 +88,11 @@ PhotoHandler = async (ctx) => {
 VideoHandler = async (ctx) => {
     console.log(ctx.video)
     const video = ctx.message.video
+    const caption = ctx.message.caption || ""
     const target = ctx.isAngel ? ctx.angel : ctx.mortal
     if (target.isRegistered()) {
         const fileLink = await ctx.telegram.getFileLink(video.file_id)
-        await ctx.otherBot.telegram.sendVideo(target.telegramId, {url: fileLink})
+        await ctx.otherBot.telegram.sendVideo(target.telegramId, {url: fileLink}, {caption})
     } else {
         await ctx.reply(`It seems that your ${ctx._name.toLowerCase()} hasn't registered with the bot on Telegram, we can't deliver your message to them. Don't worry, we'll let you know as soon as they are registered!`)
     }
