@@ -49,15 +49,21 @@ MessageHandler = async (ctx) => {
     }
 }
 
-StickerHandler = async(ctx) => {
-    console.log(ctx)
-    console.log(ctx.message)
-    let msg = await ctx.reply("sticker!")
-    await ctx.replyWithSticker('CAACAgQAAxkBAAIEfV78mvoS4SvBDMxhdHom_Yggx-UJAAJLCQACS2nuEB2AzJJszEcJGgQ')
-
+StickerHandler = async (ctx) => {
     const target = ctx.isAngel ? ctx.angel : ctx.mortal
     if (target.isRegistered()) {
-        await ctx.otherBot.telegram.sendSticker(target.telegramId, ctx.message.text)
+        await ctx.otherBot.telegram.sendSticker(target.telegramId, ctx.message.sticker.file_id)
+    } else {
+        await ctx.reply(`It seems that your ${ctx._name.toLowerCase()} hasn't registered with the bot on Telegram, we can't deliver your message to them. Don't worry, we'll let you know as soon as they are registered!`)
+    }
+}
+
+PhotoHandler = async (ctx) => {
+    const photos = ctx.message.photo
+    const target = ctx.isAngel ? ctx.angel : ctx.mortal
+    if (target.isRegistered()) {
+        const fileLink = await ctx.telegram.getFileLink(photos[0].file_id)
+        await ctx.otherBot.telegram.sendPhoto(target.telegramId, {url: fileLink})
     } else {
         await ctx.reply(`It seems that your ${ctx._name.toLowerCase()} hasn't registered with the bot on Telegram, we can't deliver your message to them. Don't worry, we'll let you know as soon as they are registered!`)
     }
@@ -77,4 +83,15 @@ StartHandler = async (ctx) => {
     ctx.reply(`start stub`)
 }
 
-module.exports = {RegisterHandler, DeregisterHandler, StatusHandler, TryRegister, MessageHandler, HelpHandler, StickerHandler, StartHandler}
+
+module.exports = {
+    RegisterHandler,
+    DeregisterHandler,
+    StatusHandler,
+    TryRegister,
+    MessageHandler,
+    HelpHandler,
+    StickerHandler,
+    StartHandler,
+    PhotoHandler
+}

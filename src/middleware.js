@@ -1,3 +1,4 @@
+const util = require("./util");
 const {TryRegister} = require("./commands");
 const {Person} = require('./model');
 
@@ -29,9 +30,15 @@ RequireRegister = async (ctx, next) => {
         ctx.mortal = model.getPersonByUuid(person.mortal)
         await next();
     } else {
-        console.log('trying to register')
-        const success = await TryRegister(ctx, ctx.message.text)
-        if (!success)
+        // console.log(Object.values(ctx))
+        let success = false;
+        let isCommand = false;
+        console.log('istext', util.isText(ctx))
+        if (util.isText(ctx)) {
+            success = await TryRegister(ctx, ctx.message.text)
+            isCommand = ctx.message.text.startsWith("/")
+        }
+        if (!success && !isCommand)
             await ctx.reply('please register');
     }
 }
