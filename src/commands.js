@@ -1,22 +1,3 @@
-async function TryRegister(ctx, uuid) {
-    console.log(`registering with code ${uuid}`)
-    const model = ctx.model;
-    const person = model.getPersonByUuid(uuid)
-    if (!person) {
-        // await ctx.reply(`invalid code ${uuid}`)
-        return false
-    }
-    if (person.isRegistered()) {
-        // await ctx.reply('user already registered')
-        return false
-    }
-    person.register(ctx.from.id)
-    model.saveToStorage()
-    await ctx.reply(`successfully registered as ${person.name}`)
-    await ctx.reply(`type /status to see who your mortal is!`)
-    return true
-}
-
 RegisterHandler = async (ctx) => {
     if (ctx.person) {
         return ctx.reply(`already registered as ${ctx.person.name}`)
@@ -28,6 +9,40 @@ RegisterHandler = async (ctx) => {
     }
     const uuid = parsed[1]
     await TryRegister(ctx, uuid)
+}
+
+RegisterSuccessHandler = async (ctx) => {
+    const person = ctx.person
+    const angel = ctx.model.getPersonByUuid(person.angel)
+    const mortal = ctx.model.getPersonByUuid(person.mortal)
+    console.log(angel, mortal)
+
+    if (angel.isRegistered()) {
+        await ctx.model.mortalBot.telegram.sendMessage(angel.telegramId, `[mortal-bot] Your mortal, ${person.name} just came online, say hi to them!`)
+    }
+
+    if (mortal.isRegistered()) {
+        await ctx.model.angelBot.telegram.sendMessage(mortal.telegramId, `[angel-bot] Your angel just came online, say hi to them!`)
+    }
+}
+
+TryRegister = async (ctx, uuid) => {
+    console.log(`registering with code ${uuid}`)
+    const model = ctx.model;
+    const person = model.getPersonByUuid(uuid)
+
+    // Failed registration if person with given uuid doesn't exist, or if already registered
+    if (!person || person.isRegistered()) {
+        return false
+    }
+
+    person.register(ctx.from.id)
+    ctx.person = person
+    model.saveToStorage()
+    ctx.reply(`successfully registered as ${person.name}`)
+    ctx.reply(`type /status to see who your mortal is!`)
+    await RegisterSuccessHandler(ctx)
+    return true
 }
 
 DeregisterHandler = async (ctx) => {
