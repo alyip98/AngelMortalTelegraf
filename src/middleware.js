@@ -1,4 +1,5 @@
 const util = require("./util");
+const messages = require("./messages");
 const {TryRegister} = require("./commands");
 const {Person} = require('./model');
 
@@ -10,10 +11,8 @@ WithModel = (model) => async (ctx, next) => {
 UserId = async (ctx, next) => {
     const telegramId = ctx.from.id;
     const model = ctx.model;
-    console.log(`incoming message from ${telegramId}`)
     const person = model.getPersonById(telegramId)
     if (person !== null) {
-        console.log(`teleid: ${telegramId}`)
         ctx.person = person
     }
     await next();
@@ -33,13 +32,12 @@ RequireRegister = async (ctx, next) => {
         // console.log(Object.values(ctx))
         let success = false;
         let isCommand = false;
-        console.log('istext', util.isText(ctx))
         if (util.isText(ctx)) {
             success = await TryRegister(ctx, ctx.message.text)
             isCommand = ctx.message.text.startsWith("/")
         }
         if (!success && !isCommand)
-            await ctx.reply('please register');
+            await ctx.reply(messages.RegisterReminder);
     }
 }
 
@@ -47,7 +45,7 @@ OnlyPrivate = async (ctx, next) => {
     let chat = ctx.chat;
     if (chat.type !== 'private') {
         try {
-            await ctx.reply("Please don't add me to groups! Byeeee 👋")
+            await ctx.reply(messages.NoGroupChats)
             await ctx.leaveChat(chat.id)
         } catch (e) {
         }

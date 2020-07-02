@@ -1,6 +1,12 @@
+const messages = require("./messages");
+
+RegisterFailedHandler = async (ctx, uuid) => {
+    ctx.reply(messages.RegisterFailedGeneralError(uuid))
+}
+
 RegisterHandler = async (ctx) => {
     if (ctx.person) {
-        return ctx.reply(`already registered as ${ctx.person.name}`)
+        return ctx.reply(messages.AlreadyRegisteredError(ctx.person.name))
     }
     const re = /\/r(?:egister)? (\w+)/g
     const parsed = re.exec(ctx.message.text)
@@ -8,14 +14,19 @@ RegisterHandler = async (ctx) => {
         return ctx.reply('register usage: /register <code>')
     }
     const uuid = parsed[1]
-    await TryRegister(ctx, uuid)
+    const success = await TryRegister(ctx, uuid)
+    if (!success) {
+        await RegisterFailedHandler(ctx, uuid);
+    }
 }
 
 RegisterSuccessHandler = async (ctx) => {
     const person = ctx.person
     const angel = ctx.model.getPersonByUuid(person.angel)
     const mortal = ctx.model.getPersonByUuid(person.mortal)
-    console.log(angel, mortal)
+
+    ctx.reply(messages.RegisterSuccess(person.name))
+    if (ctx.isAngel) ctx.reply(messages.StatusHint)
 
     if (angel.isRegistered()) {
         await ctx.model.mortalBot.telegram.sendMessage(angel.telegramId, `[mortal-bot] Your mortal, ${person.name} just came online, say hi to them!`)
@@ -27,7 +38,6 @@ RegisterSuccessHandler = async (ctx) => {
 }
 
 TryRegister = async (ctx, uuid) => {
-    console.log(`registering with code ${uuid}`)
     const model = ctx.model;
     const person = model.getPersonByUuid(uuid)
 
@@ -39,20 +49,16 @@ TryRegister = async (ctx, uuid) => {
     person.register(ctx.from.id)
     ctx.person = person
     model.saveToStorage()
-    ctx.reply(`successfully registered as ${person.name}`)
-    ctx.reply(`type /status to see who your mortal is!`)
+
     await RegisterSuccessHandler(ctx)
     return true
 }
 
 DeregisterHandler = async (ctx) => {
     const model = ctx.model
-    const person = ctx.person
-
-    console.log(`${person.name} deregistering`)
     ctx.person.deregister()
     model.saveToStorage()
-    await ctx.reply(`successfully deregistered`)
+    await ctx.reply(messages.DeregisterSuccess)
 }
 
 MessageHandler = async (ctx) => {
@@ -60,7 +66,7 @@ MessageHandler = async (ctx) => {
     if (target.isRegistered()) {
         await ctx.otherBot.telegram.sendMessage(target.telegramId, ctx.message.text)
     } else {
-        await ctx.reply(`It seems that your ${ctx._name.toLowerCase()} hasn't registered with the bot on Telegram, we can't deliver your message to them. Don't worry, we'll let you know as soon as they are registered!`)
+        await ctx.reply(messages.UnregisteredTarget(ctx._name.toLowerCase()))
     }
 }
 
@@ -69,7 +75,7 @@ StickerHandler = async (ctx) => {
     if (target.isRegistered()) {
         await ctx.otherBot.telegram.sendSticker(target.telegramId, ctx.message.sticker.file_id)
     } else {
-        await ctx.reply(`It seems that your ${ctx._name.toLowerCase()} hasn't registered with the bot on Telegram, we can't deliver your message to them. Don't worry, we'll let you know as soon as they are registered!`)
+        await ctx.reply(messages.UnregisteredTarget(ctx._name.toLowerCase()))
     }
 }
 
@@ -81,7 +87,7 @@ PhotoHandler = async (ctx) => {
         const fileLink = await ctx.telegram.getFileLink(photos[0].file_id)
         await ctx.otherBot.telegram.sendPhoto(target.telegramId, {url: fileLink}, {caption})
     } else {
-        await ctx.reply(`It seems that your ${ctx._name.toLowerCase()} hasn't registered with the bot on Telegram, we can't deliver your message to them. Don't worry, we'll let you know as soon as they are registered!`)
+        await ctx.reply(messages.UnregisteredTarget(ctx._name.toLowerCase()))
     }
 }
 
@@ -94,7 +100,7 @@ VideoHandler = async (ctx) => {
         const fileLink = await ctx.telegram.getFileLink(video.file_id)
         await ctx.otherBot.telegram.sendVideo(target.telegramId, {url: fileLink}, {caption})
     } else {
-        await ctx.reply(`It seems that your ${ctx._name.toLowerCase()} hasn't registered with the bot on Telegram, we can't deliver your message to them. Don't worry, we'll let you know as soon as they are registered!`)
+        await ctx.reply(messages.UnregisteredTarget(ctx._name.toLowerCase()))
     }
 }
 
@@ -105,11 +111,12 @@ StatusHandler = async (ctx) => {
 }
 
 HelpHandler = async (ctx) => {
-    ctx.reply(`help stub`)
+    ctx.reply(messages.HelpMessage)
 }
 
 StartHandler = async (ctx) => {
-    ctx.reply(`start stub`)
+    const message = ctx.isAngel ? messages.AngelBotWelcome : messages.MortalBotWelcome
+    ctx.reply(message + "\n" + messages.RegisterWelcome)
 }
 
 module.exports = {
