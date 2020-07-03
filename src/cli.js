@@ -50,10 +50,10 @@ async function LoadCommand(path) {
 
 async function ListAll(model) {
     // console.log(model.dumpUuids())
-    console.log('[userid] name > mortal\'s name | registered?')
+    console.log('userid | name | mortal\'s name | registered?')
     console.log(model.getPeople().map(person => {
         const mortal = model.getPersonByUuid(person.mortal)
-        return `[${person.uuid}] ${person.name} > ${mortal.name} | ${person.isRegistered()}`
+        return `${person.uuid} | ${person.name} | ${mortal.name} | ${person.isRegistered()}`
     }).join("\n"))
 }
 
