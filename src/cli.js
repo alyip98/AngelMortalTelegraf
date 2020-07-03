@@ -17,7 +17,18 @@ InputHandler = (model) => async (input) => {
         case "ls":
         case "show":
             ListAll(model)
+            break
+        case 'dump':
+            Dump(model)
+            break
+        case "announce":
+            Announce(model)
+            break
     }
+}
+
+async function Announce(model) {
+    console.log('wip command')
 }
 
 async function LoadCommand(path) {
@@ -38,6 +49,15 @@ async function LoadCommand(path) {
 }
 
 async function ListAll(model) {
+    // console.log(model.dumpUuids())
+    console.log('[userid] name > mortal\'s name | registered?')
+    console.log(model.getPeople().map(person => {
+        const mortal = model.getPersonByUuid(person.mortal)
+        return `[${person.uuid}] ${person.name} > ${mortal.name} | ${person.isRegistered()}`
+    }).join("\n"))
+}
+
+async function Dump(model) {
     console.log(model.dumpUuids())
 }
 
