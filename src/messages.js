@@ -1,9 +1,9 @@
 module.exports = {
-    RegisterReminder: 'Please register with the 9 digit code sent to you!',
+    RegisterReminder: ' Please key in your 9 digit code to register!',
     NoGroupChats: "Please don't add me to groups! Byeeee 👋",
-    AngelBotWelcome: "Welcome! This bot will act as a messaging platform between you and your angel. Please key in your 9 digit code to register!",
+    AngelBotWelcome: "Welcome! This bot will act as a messaging platform between you and your angel",
     ReferToAngelBot: " Also say hi to the angel-bot over at @anm_angel_bot if you haven't done so!",
-    MortalBotWelcome: "Welcome! This bot will act as a messaging platform between you and your mortal.",
+    MortalBotWelcome: "Welcome! This bot will act as a messaging platform between you and your mortal",
     ReferToMortalBot: "Yay! You have successfully registered! Please go to the mortal-bot at @anm_mortal_bot to start chatting with your mortal as well",
     RegisterWelcome: "Paste the 9 digit code sent to you here to register",
     UnregisteredTarget: (name) => `It seems that your ${name} hasn't registered with the bot on Telegram, we can't deliver your message to them. Don't worry, we'll let you know as soon as they have registered!`,

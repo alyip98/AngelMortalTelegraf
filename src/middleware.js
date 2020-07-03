@@ -15,6 +15,7 @@ UserId = async (ctx, next) => {
     if (person !== null) {
         ctx.person = person
     }
+    ctx.isRegistered = true
     await next();
 }
 

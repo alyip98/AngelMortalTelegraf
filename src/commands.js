@@ -122,7 +122,8 @@ HelpHandler = async (ctx) => {
 
 StartHandler = async (ctx) => {
     const message = ctx.isAngel ? messages.AngelBotWelcome : messages.MortalBotWelcome
-    ctx.reply(message)
+    const registerHint = ctx.isRegistered ? "" : "\n" + messages.RegisterReminder
+    ctx.reply(message + registerHint)
 }
 
 module.exports = {
