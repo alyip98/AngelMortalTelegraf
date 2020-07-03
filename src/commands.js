@@ -25,15 +25,20 @@ RegisterSuccessHandler = async (ctx) => {
     const angel = ctx.model.getPersonByUuid(person.angel)
     const mortal = ctx.model.getPersonByUuid(person.mortal)
 
-    ctx.reply(messages.RegisterSuccess(person.name))
-    if (ctx.isAngel) ctx.reply(messages.StatusHint)
+    await ctx.reply(messages.RegisterSuccess(person.name))
+    if (ctx.isAngel) {
+        await ctx.reply(messages.ReferToMortalBot)
+    } else {
+        await ctx.reply(messages.StatusHint)
+        await ctx.reply(messages.ReferToAngelBot)
+    }
 
     if (angel.isRegistered()) {
-        await ctx.model.mortalBot.telegram.sendMessage(angel.telegramId, `[mortal-bot] Your mortal, ${person.name} just came online, say hi to them!`)
+        await ctx.model.mortalBot.telegram.sendMessage(angel.telegramId, messages.RegisteredNotifier('mortal'))
     }
 
     if (mortal.isRegistered()) {
-        await ctx.model.angelBot.telegram.sendMessage(mortal.telegramId, `[angel-bot] Your angel just came online, say hi to them!`)
+        await ctx.model.angelBot.telegram.sendMessage(mortal.telegramId, messages.RegisteredNotifier('angel'))
     }
 }
 
@@ -107,7 +112,8 @@ VideoHandler = async (ctx) => {
 StatusHandler = async (ctx) => {
     const person = ctx.person
     const model = ctx.model
-    ctx.reply(`Hi ${person.name}! Your mortal is ${model.getPersonByUuid(person.mortal).name}`)
+    const mortal = model.getPersonByUuid(person.mortal)
+    ctx.reply(messages.StatusMessage(person.name, mortal.name))
 }
 
 HelpHandler = async (ctx) => {
@@ -116,7 +122,7 @@ HelpHandler = async (ctx) => {
 
 StartHandler = async (ctx) => {
     const message = ctx.isAngel ? messages.AngelBotWelcome : messages.MortalBotWelcome
-    ctx.reply(message + "\n" + messages.RegisterWelcome)
+    ctx.reply(message)
 }
 
 module.exports = {
