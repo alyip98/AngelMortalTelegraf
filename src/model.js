@@ -88,6 +88,7 @@ class Person {
         this.uuid = ""
         this.name = ""
         this.username = ""
+        this.og = ""
         this.telegramId = ""
         this.angel = null;
         this.mortal = null;
@@ -96,6 +97,11 @@ class Person {
 
     withName(name) {
         this.name = name;
+        return this;
+    }
+
+    withOg(og) {
+        this.og = og;
         return this;
     }
 
@@ -116,6 +122,7 @@ class Person {
             uuid: this.uuid,
             name: this.name,
             username: this.username,
+            og: this.og,
             telegramId: this.telegramId,
             angel: this.angel || null,
             mortal: this.mortal || null,
@@ -127,6 +134,7 @@ class Person {
         person.uuid= obj.uuid
         person.name= obj.name
         person.username= obj.username
+        person.og = obj.og
         person.telegramId= obj.telegramId
         person.angel = obj.angel
         person.mortal = obj.mortal

@@ -111,10 +111,17 @@ VideoHandler = async (ctx) => {
 }
 
 StatusHandler = async (ctx) => {
+    if (!ctx.isRegistered) {
+        return ctx.reply(messages.RegisterReminder)
+    }
     const person = ctx.person
     const model = ctx.model
     const mortal = model.getPersonByUuid(person.mortal)
-    ctx.reply(messages.StatusMessage(person.name, mortal.name))
+    let mortalName = mortal.name
+    if (mortal.og) {
+        mortalName += ` (${mortal.og})`
+    }
+    ctx.reply(messages.StatusMessage(person.name, mortalName))
 }
 
 HelpHandler = async (ctx) => {

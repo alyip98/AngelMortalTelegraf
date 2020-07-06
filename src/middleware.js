@@ -50,7 +50,8 @@ RequireRegister = async (ctx, next) => {
             isCommand = ctx.message.text.startsWith("/")
         }
         if (!success && !isCommand)
-            await ctx.reply(messages.RegisterReminder);
+            return ctx.reply(messages.RegisterReminder);
+        await next()
     }
 }
 
