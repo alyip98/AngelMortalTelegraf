@@ -23,7 +23,6 @@ async function start(model) {
     const bots = [angelBot, mortalBot]
 
     bots.forEach(bot => {
-        bot.use(Telegraf.log(console.log))
         bot.use(Middleware.WithModel(model), Middleware.ErrorHandler, Middleware.OnlyPrivate, Middleware.UserId, Middleware.CodeFilter)
         bot.start(Commands.StartHandler)
         bot.help(Commands.HelpHandler)
