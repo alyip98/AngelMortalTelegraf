@@ -137,8 +137,10 @@ StartHandler = async (ctx) => {
 module.exports = {
     RegisterHandler,
     DeregisterHandler,
-    StatusHandler,
     TryRegister,
+    RegisterSuccessHandler,
+    RegisterFailedHandler,
+    StatusHandler,
     MessageHandler,
     HelpHandler,
     StickerHandler,

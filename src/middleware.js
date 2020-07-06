@@ -1,7 +1,19 @@
 const util = require("./util");
 const messages = require("./messages");
-const {TryRegister} = require("./commands");
+const {TryRegister, RegisterSuccessHandler, RegisterFailedHandler} = require("./commands");
 const {Person} = require('./model');
+const {Telegraf} = require('telegraf');
+
+
+CodeFilter = Telegraf.hears(/^\d{9}$/m, async (ctx) => {
+    if (ctx.isRegistered) {
+        return await ctx.reply(messages.RegisterSuccess(ctx.person.name, ctx.chatTarget))
+    }
+    const success = await TryRegister(ctx, ctx.message.text)
+    if (!success) {
+        await RegisterFailedHandler(ctx, ctx.message.text);
+    }
+})
 
 WithModel = (model) => async (ctx, next) => {
     ctx.model = model
@@ -73,4 +85,4 @@ Settings = (isAngel=true, otherBot) => async(ctx, next) => {
     await next()
 }
 
-module.exports = {UserId, OnlyPrivate, ErrorHandler, RequireRegister, WithModel, Settings}
+module.exports = {UserId, OnlyPrivate, ErrorHandler, RequireRegister, WithModel, Settings, CodeFilter}
