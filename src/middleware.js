@@ -14,8 +14,8 @@ UserId = async (ctx, next) => {
     const person = model.getPersonById(telegramId)
     if (person !== null) {
         ctx.person = person
+        ctx.isRegistered = true
     }
-    ctx.isRegistered = true
     await next();
 }
 
