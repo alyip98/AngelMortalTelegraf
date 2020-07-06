@@ -125,6 +125,10 @@ StartHandler = async (ctx) => {
     await ctx.reply(message)
     if (!ctx.isRegistered) {
         await ctx.reply(messages.RegisterReminder)
+    } else {
+        if (ctx.isMortal) {
+            await ctx.reply(messages.StatusHint)
+        }
     }
 }
 
