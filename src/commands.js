@@ -110,6 +110,31 @@ VideoHandler = async (ctx) => {
     }
 }
 
+VoiceHandler = async (ctx) => {
+    console.log(ctx.voice)
+    // const video = ctx.message.video
+    // const caption = ctx.message.caption || ""
+    // const target = ctx.isAngel ? ctx.angel : ctx.mortal
+    // if (target.isRegistered()) {
+    //     const fileLink = await ctx.telegram.getFileLink(video.file_id)
+    //     await ctx.otherBot.telegram.sendVideo(target.telegramId, {url: fileLink}, {caption})
+    // } else {
+    //     await ctx.reply(messages.UnregisteredTarget(ctx.chatAs))
+    // }
+}
+
+VideoNoteHandler = async (ctx) => {
+    console.log(ctx.message)
+    const video = ctx.message.video_note
+    const target = ctx.isAngel ? ctx.angel : ctx.mortal
+    if (target.isRegistered()) {
+        const fileLink = await ctx.telegram.getFileLink(video.file_id)
+        await ctx.otherBot.telegram.sendVideoNote(target.telegramId, {url: fileLink})
+    } else {
+        await ctx.reply(messages.UnregisteredTarget(ctx.chatAs))
+    }
+}
+
 StatusHandler = async (ctx) => {
     if (!ctx.isRegistered) {
         return ctx.reply(messages.RegisterReminder)
@@ -153,5 +178,7 @@ module.exports = {
     StickerHandler,
     StartHandler,
     PhotoHandler,
-    VideoHandler
+    VideoHandler,
+    VideoNoteHandler,
+    VoiceHandler
 }
