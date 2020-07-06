@@ -116,7 +116,7 @@ StatusHandler = async (ctx) => {
 }
 
 HelpHandler = async (ctx) => {
-    ctx.reply(messages.HelpMessage)
+    await ctx.replyWithMarkdown(messages.HelpMessage)
 }
 
 StartHandler = async (ctx) => {
