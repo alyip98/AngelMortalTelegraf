@@ -111,16 +111,14 @@ VideoHandler = async (ctx) => {
 }
 
 VoiceHandler = async (ctx) => {
-    console.log(ctx.voice)
-    // const video = ctx.message.video
-    // const caption = ctx.message.caption || ""
-    // const target = ctx.isAngel ? ctx.angel : ctx.mortal
-    // if (target.isRegistered()) {
-    //     const fileLink = await ctx.telegram.getFileLink(video.file_id)
-    //     await ctx.otherBot.telegram.sendVideo(target.telegramId, {url: fileLink}, {caption})
-    // } else {
-    //     await ctx.reply(messages.UnregisteredTarget(ctx.chatAs))
-    // }
+    const voice = ctx.message.voice
+    const target = ctx.isAngel ? ctx.angel : ctx.mortal
+    if (target.isRegistered()) {
+        const fileLink = await ctx.telegram.getFileLink(voice.file_id)
+        await ctx.otherBot.telegram.sendVoice(target.telegramId, {url: fileLink})
+    } else {
+        await ctx.reply(messages.UnregisteredTarget(ctx.chatAs))
+    }
 }
 
 VideoNoteHandler = async (ctx) => {
@@ -143,9 +141,6 @@ StatusHandler = async (ctx) => {
     const model = ctx.model
     const mortal = model.getPersonByUuid(person.mortal)
     let mortalName = mortal.name
-    if (mortal.og) {
-        mortalName += ` (${mortal.og})`
-    }
     ctx.reply(messages.StatusMessage(person.name, mortalName))
 }
 
