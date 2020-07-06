@@ -60,9 +60,11 @@ TryRegister = async (ctx, uuid) => {
 
 DeregisterHandler = async (ctx) => {
     const model = ctx.model
+    const telegramId = ctx.person.telegramId
     ctx.person.deregister()
     model.saveToStorage()
     await ctx.reply(messages.DeregisterSuccess)
+    await ctx.otherBot.telegram.sendMessage(telegramId, messages.DeregisterSuccess)
 }
 
 MessageHandler = async (ctx) => {
