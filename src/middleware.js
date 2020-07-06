@@ -67,8 +67,8 @@ Settings = (isAngel=true, otherBot) => async(ctx, next) => {
     ctx.isAngel = isAngel
     ctx.isMortal = !isAngel
     ctx.otherBot = otherBot
-    ctx._name = isAngel ? "Angel" : "Mortal"
-    ctx._otherName = isAngel ? "Mortal" : "Angel"
+    ctx.chatTarget = isAngel ? "Angel" : "Mortal"
+    ctx.chatAs = isAngel ? "Mortal" : "Angel"
 
     await next()
 }

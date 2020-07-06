@@ -25,12 +25,11 @@ RegisterSuccessHandler = async (ctx) => {
     const angel = ctx.model.getPersonByUuid(person.angel)
     const mortal = ctx.model.getPersonByUuid(person.mortal)
 
-    await ctx.reply(messages.RegisterSuccess(person.name))
-    if (ctx.isAngel) {
-        await ctx.reply(messages.ReferToMortalBot)
-    } else {
+    await ctx.reply(messages.RegisterSuccess(person.name, ctx.chatTarget))
+
+    await ctx.reply(messages.ReferToBot(ctx.chatAs))
+    if (!ctx.isAngel) {
         await ctx.reply(messages.StatusHint)
-        await ctx.reply(messages.ReferToAngelBot)
     }
 
     if (angel.isRegistered()) {
@@ -71,7 +70,7 @@ MessageHandler = async (ctx) => {
     if (target.isRegistered()) {
         await ctx.otherBot.telegram.sendMessage(target.telegramId, ctx.message.text)
     } else {
-        await ctx.reply(messages.UnregisteredTarget(ctx._name.toLowerCase()))
+        await ctx.reply(messages.UnregisteredTarget(ctx.chatAs))
     }
 }
 
@@ -80,7 +79,7 @@ StickerHandler = async (ctx) => {
     if (target.isRegistered()) {
         await ctx.otherBot.telegram.sendSticker(target.telegramId, ctx.message.sticker.file_id)
     } else {
-        await ctx.reply(messages.UnregisteredTarget(ctx._name.toLowerCase()))
+        await ctx.reply(messages.UnregisteredTarget(ctx.chatAs))
     }
 }
 
@@ -92,7 +91,7 @@ PhotoHandler = async (ctx) => {
         const fileLink = await ctx.telegram.getFileLink(photos[0].file_id)
         await ctx.otherBot.telegram.sendPhoto(target.telegramId, {url: fileLink}, {caption})
     } else {
-        await ctx.reply(messages.UnregisteredTarget(ctx._name.toLowerCase()))
+        await ctx.reply(messages.UnregisteredTarget(ctx.chatAs))
     }
 }
 
@@ -105,7 +104,7 @@ VideoHandler = async (ctx) => {
         const fileLink = await ctx.telegram.getFileLink(video.file_id)
         await ctx.otherBot.telegram.sendVideo(target.telegramId, {url: fileLink}, {caption})
     } else {
-        await ctx.reply(messages.UnregisteredTarget(ctx._name.toLowerCase()))
+        await ctx.reply(messages.UnregisteredTarget(ctx.chatAs))
     }
 }
 
@@ -121,9 +120,12 @@ HelpHandler = async (ctx) => {
 }
 
 StartHandler = async (ctx) => {
-    const message = ctx.isAngel ? messages.AngelBotWelcome : messages.MortalBotWelcome
-    const registerHint = ctx.isRegistered ? "" : "\n" + messages.RegisterReminder
-    ctx.reply(message + registerHint)
+    const name = ctx.isRegistered ? " " + ctx.person.name : ""
+    const message = messages.BotWelcome(name, ctx.chatTarget)
+    await ctx.reply(message)
+    if (!ctx.isRegistered) {
+        await ctx.reply(messages.RegisterReminder)
+    }
 }
 
 module.exports = {
