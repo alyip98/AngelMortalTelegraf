@@ -8,7 +8,7 @@ module.exports = {
     DeregisterSuccess: "Successfully deregistered",
     RegisterSuccess: (name, chatTarget) => `Yay! You have successfully registered as ${name}! Have fun chatting with your ${chatTarget}`,
     StatusHint: "Type /mortal to see who your mortal is!",
-    StatusMessage: (name, mortalName) => `Hi ${name}! Your mortal is ${mortalName}`,
+    StatusMessage: (name, mortalName) => `Hi ${name}! Your mortal is ${mortalName}. Have fun chatting with them!`,
     AlreadyRegisteredError: (name) => `Already registered as ${name}`,
     RegisterFailedGeneralError: (code) => `Failed to register with code ${code}`,
     HelpMessage: "This bot allows you to communicate with your angel/mortal anonymously.\nRegister with the code given to you by typing\n`/register <code>`\nOnce registered, you can send messages to your angel/mortal just by sending them here just like any other Telegram chat. Currently supported message types are text, stickers, photos and videos.",
