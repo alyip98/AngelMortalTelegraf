@@ -24,6 +24,25 @@ InputHandler = (model) => async (input) => {
         case "announce":
             Announce(model)
             break
+        case "d":
+        case "rm":
+        case "delete":
+        case "deregister":
+            Deregister(model, args[0])
+            break
+        default:
+            console.log("Unknown command", command)
+    }
+}
+
+async function Deregister(model, uuid) {
+    const person = model.getPersonByUuid(uuid)
+    if (person) {
+        console.log("Deregistered", person.name, uuid, person.telegramId)
+        person.deregister()
+        model.saveToStorage()
+    } else {
+        console.log("No one with that code found")
     }
 }
 
@@ -37,9 +56,14 @@ async function LoadCommand(path) {
 
     const model = new Model();
     content.split("\n").forEach(line => {
-        const name = line.trim()
+        const tokens = line.split(",")
+        const name = tokens[0].trim()
+        let og = ""
+        if (tokens.length >= 2) {
+            og = tokens[1].trim()
+        }
         if (name!=="") {
-            const person = new Person().withName(line.trim())
+            const person = new Person().withName(name).withOg(og)
             model.addPerson(person)
         }
     })
