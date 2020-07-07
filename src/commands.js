@@ -98,7 +98,6 @@ PhotoHandler = async (ctx) => {
 }
 
 VideoHandler = async (ctx) => {
-    console.log(ctx.video)
     const video = ctx.message.video
     const caption = ctx.message.caption || ""
     const target = ctx.isAngel ? ctx.angel : ctx.mortal
@@ -122,7 +121,6 @@ VoiceHandler = async (ctx) => {
 }
 
 VideoNoteHandler = async (ctx) => {
-    console.log(ctx.message)
     const video = ctx.message.video_note
     const target = ctx.isAngel ? ctx.angel : ctx.mortal
     if (target.isRegistered()) {

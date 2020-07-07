@@ -36,13 +36,11 @@ RequireRegister = async (ctx, next) => {
     const model = ctx.model;
     const person = model.getPersonById(telegramId)
     if (person !== null) {
-        console.log(person.name)
         ctx.person = person
         ctx.angel = model.getPersonByUuid(person.angel)
         ctx.mortal = model.getPersonByUuid(person.mortal)
         await next();
     } else {
-        // console.log(Object.values(ctx))
         let success = false;
         let isCommand = false;
         if (util.isText(ctx)) {

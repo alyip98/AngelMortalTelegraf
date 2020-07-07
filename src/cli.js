@@ -73,7 +73,6 @@ async function LoadCommand(path) {
 }
 
 async function ListAll(model) {
-    // console.log(model.dumpUuids())
     console.log('userid | name | mortal\'s name | registered?')
     console.log(model.getPeople().map(person => {
         const mortal = model.getPersonByUuid(person.mortal)

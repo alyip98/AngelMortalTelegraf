@@ -48,7 +48,6 @@ class Model {
         } catch (e) {
             console.log(`couldn't load data from storage, creating fresh data`)
         }
-        // console.log(model)
         return model
     }
 
