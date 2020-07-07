@@ -72,7 +72,7 @@ MessageHandler = async (ctx) => {
     if (target.isRegistered()) {
         await ctx.otherBot.telegram.sendMessage(target.telegramId, ctx.message.text)
     } else {
-        await ctx.reply(messages.UnregisteredTarget(ctx.chatAs))
+        await ctx.reply(messages.UnregisteredTarget(ctx.chatTarget))
     }
 }
 
@@ -81,7 +81,7 @@ StickerHandler = async (ctx) => {
     if (target.isRegistered()) {
         await ctx.otherBot.telegram.sendSticker(target.telegramId, ctx.message.sticker.file_id)
     } else {
-        await ctx.reply(messages.UnregisteredTarget(ctx.chatAs))
+        await ctx.reply(messages.UnregisteredTarget(ctx.chatTarget))
     }
 }
 
@@ -93,7 +93,7 @@ PhotoHandler = async (ctx) => {
         const fileLink = await ctx.telegram.getFileLink(photos[0].file_id)
         await ctx.otherBot.telegram.sendPhoto(target.telegramId, {url: fileLink}, {caption})
     } else {
-        await ctx.reply(messages.UnregisteredTarget(ctx.chatAs))
+        await ctx.reply(messages.UnregisteredTarget(ctx.chatTarget))
     }
 }
 
@@ -106,7 +106,7 @@ VideoHandler = async (ctx) => {
         const fileLink = await ctx.telegram.getFileLink(video.file_id)
         await ctx.otherBot.telegram.sendVideo(target.telegramId, {url: fileLink}, {caption})
     } else {
-        await ctx.reply(messages.UnregisteredTarget(ctx.chatAs))
+        await ctx.reply(messages.UnregisteredTarget(ctx.chatTarget))
     }
 }
 
@@ -117,7 +117,7 @@ VoiceHandler = async (ctx) => {
         const fileLink = await ctx.telegram.getFileLink(voice.file_id)
         await ctx.otherBot.telegram.sendVoice(target.telegramId, {url: fileLink})
     } else {
-        await ctx.reply(messages.UnregisteredTarget(ctx.chatAs))
+        await ctx.reply(messages.UnregisteredTarget(ctx.chatTarget))
     }
 }
 
@@ -129,7 +129,7 @@ VideoNoteHandler = async (ctx) => {
         const fileLink = await ctx.telegram.getFileLink(video.file_id)
         await ctx.otherBot.telegram.sendVideoNote(target.telegramId, {url: fileLink})
     } else {
-        await ctx.reply(messages.UnregisteredTarget(ctx.chatAs))
+        await ctx.reply(messages.UnregisteredTarget(ctx.chatTarget))
     }
 }
 
