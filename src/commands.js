@@ -59,6 +59,9 @@ TryRegister = async (ctx, uuid) => {
 }
 
 DeregisterHandler = async (ctx) => {
+    if (!ctx.isRegistered) {
+        return ctx.reply(messages.NotRegistered)
+    }
     const model = ctx.model
     const telegramId = ctx.person.telegramId
     ctx.person.deregister()

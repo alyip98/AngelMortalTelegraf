@@ -70,7 +70,7 @@ ErrorHandler = async (ctx, next) => {
     try {
         await next()
     } catch (e) {
-        console.error(e);
+        Telegraf.log(console.error)(ctx, ()=>console.error(e))
     }
 }
 
