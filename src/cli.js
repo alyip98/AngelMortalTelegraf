@@ -16,7 +16,7 @@ InputHandler = (model) => async (input) => {
         case "list":
         case "ls":
         case "show":
-            ListAll(model)
+            ListAll(model, ...args)
             break
         case 'dump':
             Dump(model)
@@ -72,12 +72,18 @@ async function LoadCommand(path) {
     return model
 }
 
-async function ListAll(model) {
-    console.log('userid | name | mortal\'s name | registered?')
-    console.log(model.getPeople().map(person => {
+async function ListAll(model, ...args) {
+    let out = ""
+    out += 'userid | name | mortal\'s name | registered?\n'
+    out+= (model.getPeople().map(person => {
         const mortal = model.getPersonByUuid(person.mortal)
         return `${person.uuid} | ${person.name} | ${mortal.name} | ${person.isRegistered()}`
     }).join("\n"))
+    if (args[0]) {
+        fs.writeFileSync(args[0], out)
+    } else {
+        console.log(out)
+    }
 }
 
 async function Dump(model) {
