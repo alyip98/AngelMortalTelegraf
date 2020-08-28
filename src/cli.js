@@ -56,14 +56,9 @@ async function LoadCommand(path) {
 
     const model = new Model();
     content.split("\n").forEach(line => {
-        const tokens = line.split(",")
-        const name = tokens[0].trim()
-        let og = ""
-        if (tokens.length >= 2) {
-            og = tokens[1].trim()
-        }
-        if (name!=="") {
-            const person = new Person().withName(name).withOg(og)
+        const name = line.trim()
+        if (name !== "") {
+            const person = new Person().withName(name)
             model.addPerson(person)
         }
     })
@@ -75,7 +70,7 @@ async function LoadCommand(path) {
 async function ListAll(model, ...args) {
     let out = ""
     out += 'userid | name | mortal\'s name | registered?\n'
-    out+= (model.getPeople().map(person => {
+    out += (model.getPeople().map(person => {
         const mortal = model.getPersonByUuid(person.mortal)
         return `${person.uuid} | ${person.name} | ${mortal.name} | ${person.isRegistered()}`
     }).join("\n"))
