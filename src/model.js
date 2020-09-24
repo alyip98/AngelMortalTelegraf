@@ -18,6 +18,12 @@ class Model {
         this.people.push(person)
     }
 
+    getPersonByName(name) {
+        const _name = name.toLowerCase()
+        const filtered = this.people.filter(person => person.name.toLowerCase() === _name)
+        return filtered.length > 0 ? filtered[0] : null
+    }
+
     getPersonByUuid(uuid) {
         const filtered = this.people.filter(person => person.uuid === uuid)
         return filtered.length > 0 ? filtered[0] : null
@@ -115,7 +121,7 @@ class Person {
     isRegistered() {
         return this.telegramId !== ""
     }
-    
+
     toJson() {
         return {
             uuid: this.uuid,
@@ -127,7 +133,7 @@ class Person {
             mortal: this.mortal || null,
         }
     }
-    
+
     static fromJson(obj) {
         const person = new Person()
         person.uuid= obj.uuid
@@ -137,7 +143,7 @@ class Person {
         person.telegramId= obj.telegramId
         person.angel = obj.angel
         person.mortal = obj.mortal
-        
+
         return person
     }
 }

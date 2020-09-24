@@ -9,7 +9,7 @@ InputHandler = (model) => async (input) => {
     const args = tokens.slice(1)
     switch (command) {
         case "load":
-            model.copy(await LoadCommand(args[0]))
+            model.copy(await LoadCommand(args[0], Boolean(args[1])))
             console.log(model.dumpUuids())
             model.saveToStorage()
             break
@@ -50,10 +50,38 @@ async function Announce(model) {
     console.log('wip command')
 }
 
-async function LoadCommand(path) {
-    console.log(`Loading data from ${path}`)
-    const content = fs.readFileSync(path, {encoding: "utf8"});
+function loadPaired(content) {
+    const model = new Model();
+    content.split("\n").forEach(line => {
+        const name = line.split(",")[0].trim()
+        if (name !== "") {
+            console.log(name)
+            const person = new Person().withName(name)
+            model.addPerson(person)
+        }
+    })
+    model.generateUuids()
 
+    // load data.txt true
+    content.split("\n").forEach(line => {
+        if (line === "") return;
+        const angel = line.split(",")[0].trim()
+        const mortal = line.split(",")[1].trim()
+        if (angel !== "" && mortal !== "") {
+            console.log(`${angel}-${mortal}`)
+            const a = model.getPersonByName(angel)
+            const m = model.getPersonByName(mortal)
+            // console.log(a, m)
+            a.mortal = m.uuid
+            m.angel = a.uuid
+        } else {
+            console.error("Invalid line: " + line)
+        }
+    })
+    return model
+}
+
+function loadCircular(content) {
     const model = new Model();
     content.split("\n").forEach(line => {
         const name = line.trim()
@@ -65,6 +93,13 @@ async function LoadCommand(path) {
     model.generateUuids()
     model.setupAMRefs()
     return model
+}
+
+async function LoadCommand(path, paired = false) {
+    console.log(`Loading data from ${path}`)
+    const content = fs.readFileSync(path, {encoding: "utf8"});
+
+    return paired ? loadPaired(content) : loadCircular(content)
 }
 
 async function ListAll(model, ...args) {
