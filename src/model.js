@@ -62,6 +62,15 @@ class Model {
     }
 
     // TODO: ensure uniqueness
+    generateNewUuid() {
+        const existingIDs = this.people.map(p => p.uuid);
+        let newID;
+        do {
+            newID = Math.floor(Math.random() * 900000000 + 100000000).toString();
+        } while (existingIDs.includes(newID))
+        return newID;
+    }
+
     // TODO: add option to not generate if already generated
     generateUuids() {
         function generateUuid() {
