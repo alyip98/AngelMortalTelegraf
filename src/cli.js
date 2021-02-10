@@ -64,7 +64,7 @@ function loadPaired(content) {
 
     // load data.txt true
     content.split("\n").forEach(line => {
-        if (line === "") return;
+        if (line.trim() === "") return;
         const angel = line.split(",")[0].trim()
         const mortal = line.split(",")[1].trim()
         if (angel !== "" && mortal !== "") {
@@ -121,3 +121,4 @@ async function Dump(model) {
 }
 
 module.exports = {InputHandler, LoadCommand}
+
