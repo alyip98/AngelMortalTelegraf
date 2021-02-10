@@ -61,6 +61,8 @@ class Model {
         this.store.setItem('data', this.toJson())
     }
 
+    // TODO: ensure uniqueness
+    // TODO: add option to not generate if already generated
     generateUuids() {
         function generateUuid() {
             return Math.floor(Math.random() * 900000000 + 100000000).toString()
