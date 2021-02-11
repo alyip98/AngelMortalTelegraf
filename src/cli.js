@@ -9,10 +9,15 @@ InputHandler = (model) => async (input) => {
     const args = tokens.slice(1)
     switch (command) {
         case "load":
-            model.copy(await LoadCommand(args[0], Boolean(args[1])))
+            model.copyPeopleFrom(await LoadCommand(args[0], false));
             console.log(model.dumpUuids())
             model.saveToStorage()
-            break
+            break;
+        case "loadpaired":
+            model.copyPeopleFrom(await LoadCommand(args[0], true));
+            console.log(model.dumpUuids())
+            model.saveToStorage()
+            break;
         case "list":
         case "ls":
         case "show":
