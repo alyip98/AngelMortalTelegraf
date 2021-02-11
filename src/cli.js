@@ -1,4 +1,5 @@
 const fs = require('fs')
+const storage = require("node-persist");
 const {Person, Model} = require("./model");
 
 InputHandler = (model) => async (input) => {
@@ -35,6 +36,11 @@ InputHandler = (model) => async (input) => {
         case "deregister":
             Deregister(model, args[0])
             break
+        case "nuke":
+            // TODO: check for confirmation
+            // delete all node persist data
+            await storage.defaultInstance.clear();
+            break;
         default:
             console.log("Unknown command", command)
     }
