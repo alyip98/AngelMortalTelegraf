@@ -61,7 +61,6 @@ class Model {
         this.store.setItem('data', this.toJson())
     }
 
-    // TODO: ensure uniqueness
     generateNewUuid() {
         const existingIDs = this.people.map(p => p.uuid);
         let newID;
@@ -83,7 +82,7 @@ class Model {
 
     setupAMRefs() {
         for (let i = 0; i < this.people.length; i++) {
-            const j = (i + 1)%this.people.length
+            const j = (i + 1) % this.people.length
             this.people[i].mortal = this.people[j].uuid
             this.people[j].angel = this.people[i].uuid
         }
@@ -96,6 +95,23 @@ class Model {
     copy(other) {
         this.people = other.people
         // this.store = other.store
+    hasPersonWithName(name){
+        for(person of this.people){
+            if(newPerson.name === person.name){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    copyPeopleFrom(other) {
+        for (const newPerson of other.people) {
+            if(this.hasPersonWithName(newPerson.name)){
+                continue;
+            }
+            newPerson.uuid = this.generateNewUuid();
+            this.addPerson(person);
+        }
     }
 }
 
@@ -147,11 +163,11 @@ class Person {
 
     static fromJson(obj) {
         const person = new Person()
-        person.uuid= obj.uuid
-        person.name= obj.name
-        person.username= obj.username
+        person.uuid = obj.uuid
+        person.name = obj.name
+        person.username = obj.username
         person.og = obj.og
-        person.telegramId= obj.telegramId
+        person.telegramId = obj.telegramId
         person.angel = obj.angel
         person.mortal = obj.mortal
 
