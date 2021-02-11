@@ -70,16 +70,6 @@ class Model {
         return newID;
     }
 
-    // TODO: add option to not generate if already generated
-    generateUuids() {
-        function generateUuid() {
-            return Math.floor(Math.random() * 900000000 + 100000000).toString()
-        }
-        this.people.forEach(person => {
-            person.uuid = generateUuid()
-        })
-    }
-
     setupAMRefs() {
         for (let i = 0; i < this.people.length; i++) {
             const j = (i + 1) % this.people.length
@@ -92,12 +82,9 @@ class Model {
         return this.people.map(person => `${person.name},${person.uuid}`).join("\n")
     }
 
-    copy(other) {
-        this.people = other.people
-        // this.store = other.store
-    hasPersonWithName(name){
-        for(person of this.people){
-            if(newPerson.name === person.name){
+    hasPersonWithName(name) {
+        for (const person of this.people) {
+            if (name === person.name) {
                 return true;
             }
         }
@@ -106,11 +93,12 @@ class Model {
 
     copyPeopleFrom(other) {
         for (const newPerson of other.people) {
-            if(this.hasPersonWithName(newPerson.name)){
+            if (this.hasPersonWithName(newPerson.name)) {
+                console.warn("Error: there is already a person " + name + " in the database.");
                 continue;
             }
             newPerson.uuid = this.generateNewUuid();
-            this.addPerson(person);
+            this.addPerson(newPerson);
         }
     }
 }
