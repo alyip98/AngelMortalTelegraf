@@ -61,6 +61,7 @@ async function Announce(model) {
     console.log('wip command')
 }
 
+// loadpaired data.txt
 function loadPaired(content) {
     const model = new Model();
     content.split("\n").forEach(line => {
@@ -73,20 +74,21 @@ function loadPaired(content) {
     })
     model.generateUuids()
 
-    // load data.txt true
     content.split("\n").forEach(line => {
-        if (line.trim() === "") return;
-        const angel = line.split(",")[0].trim()
-        const mortal = line.split(",")[1].trim()
-        if (angel !== "" && mortal !== "") {
-            console.log(`${angel}-${mortal}`)
-            const a = model.getPersonByName(angel)
-            const m = model.getPersonByName(mortal)
-            // console.log(a, m)
-            a.mortal = m.uuid
-            m.angel = a.uuid
-        } else {
+        if (line.trim() === "") {
+            return;
+        }
+        const angelName = line.split(",")[0].trim()
+        const mortalName = line.split(",")[1].trim()
+        if (angelName !== "" || mortalName !== "") {
             console.error("Invalid line: " + line)
+        } else {
+            console.log(`${angelName}-${mortalName}`)
+            const angel = model.getPersonByName(angelName)
+            const mortal = model.getPersonByName(mortalName)
+            // console.log(a, m)
+            angel.mortal = mortal.uuid
+            mortal.angel = angel.uuid
         }
     })
     return model
