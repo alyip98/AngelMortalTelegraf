@@ -38,11 +38,12 @@ InputHandler = (model) => async (input) => {
         case "deregister":
             Deregister(model, args[0])
             break
+        //TODO: add save to storage
         case "nuke":
             // TODO: check for confirmation
             // delete all node persist data
             await storage.defaultInstance.clear();
-            console.log("All data deleted");
+            console.log("All data deleted. Restart the app to take effect.");
             break;
         default:
             console.log("Unknown command", command)
