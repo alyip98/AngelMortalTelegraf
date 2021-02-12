@@ -9,14 +9,16 @@ InputHandler = (model) => async (input) => {
     const command = tokens[0].toLowerCase()
     const args = tokens.slice(1)
     switch (command) {
-        case "load":
-            model.copyPeopleFrom(await LoadCommand(args[0], false));
-            console.log(model.dumpUuids())
-            model.saveToStorage()
-            break;
+        // case "load":
+        //    TODO: fix load circular
+
+        //     model.copyPeopleFrom(await LoadCommand(args[0], false, model));
+        //     console.log(model.dumpUuids())
+        //     model.saveToStorage()
+        //     breduak;
         case "loadpaired":
-            model.copyPeopleFrom(await LoadCommand(args[0], true));
-            console.log(model.dumpUuids())
+            await LoadCommand(args[0], true, model);
+            // console.log(model.dumpUuids())
             model.saveToStorage()
             break;
         case "list":
@@ -40,6 +42,7 @@ InputHandler = (model) => async (input) => {
             // TODO: check for confirmation
             // delete all node persist data
             await storage.defaultInstance.clear();
+            console.log("All data deleted");
             break;
         default:
             console.log("Unknown command", command)
@@ -62,17 +65,16 @@ async function Announce(model) {
 }
 
 // loadpaired data.txt
-function loadPaired(content) {
-    const model = new Model();
+function loadPaired(content, model) {
     content.split("\n").forEach(line => {
         const name = line.split(",")[0].trim()
         if (name !== "") {
-            console.log(name)
-            const person = new Person().withName(name)
-            model.addPerson(person)
+            const newPerson = new Person().withName(name)
+            model.addPerson(newPerson)
+            console.log(newPerson.name + " - " + newPerson.uuid);
         }
     })
-    model.generateUuids()
+    //TODO: print new uuids
 
     content.split("\n").forEach(line => {
         if (line.trim() === "") {
@@ -80,7 +82,7 @@ function loadPaired(content) {
         }
         const angelName = line.split(",")[0].trim()
         const mortalName = line.split(",")[1].trim()
-        if (angelName !== "" || mortalName !== "") {
+        if (angelName === "" || mortalName === "") {
             console.error("Invalid line: " + line)
         } else {
             console.log(`${angelName}-${mortalName}`)
@@ -91,7 +93,6 @@ function loadPaired(content) {
             mortal.angel = angel.uuid
         }
     })
-    return model
 }
 
 function loadCircular(content) {
@@ -103,16 +104,16 @@ function loadCircular(content) {
             model.addPerson(person)
         }
     })
-    model.generateUuids()
+    // model.generateUuids()
     model.setupAMRefs()
     return model
 }
 
-async function LoadCommand(path, paired = false) {
+async function LoadCommand(path, paired = false, model) {
     console.log(`Loading data from ${path}`)
     const content = fs.readFileSync(path, {encoding: "utf8"});
 
-    return paired ? loadPaired(content) : loadCircular(content)
+    paired ? loadPaired(content, model) : loadCircular(content)
 }
 
 async function ListAll(model, ...args) {
@@ -120,7 +121,8 @@ async function ListAll(model, ...args) {
     out += 'userid | name | mortal\'s name | registered?\n'
     out += (model.getPeople().map(person => {
         const mortal = model.getPersonByUuid(person.mortal)
-        return `${person.uuid} | ${person.name} | ${mortal.name} | ${person.isRegistered()}`
+        const mortalName = mortal === null ? "--" : mortal.name;
+        return `${person.uuid} | ${person.name} | ${mortalName} | ${person.isRegistered()}`
     }).join("\n"))
     if (args[0]) {
         fs.writeFileSync(args[0], out)

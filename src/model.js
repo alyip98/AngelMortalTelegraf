@@ -15,7 +15,8 @@ class Model {
     }
 
     addPerson(person) {
-        this.people.push(person)
+        person.uuid = this.generateNewUuid();
+        this.people.push(person);
     }
 
     getPersonByName(name) {
@@ -91,16 +92,16 @@ class Model {
         return false;
     }
 
-    copyPeopleFrom(other) {
-        for (const newPerson of other.people) {
-            if (this.hasPersonWithName(newPerson.name)) {
-                console.warn("Error: there is already a person " + name + " in the database.");
-                continue;
-            }
-            newPerson.uuid = this.generateNewUuid();
-            this.addPerson(newPerson);
-        }
-    }
+    // copyPeopleFrom(other) {
+    //     for (const newPerson of other.people) {
+    //         if (this.hasPersonWithName(newPerson.name)) {
+    //             console.warn("Error: there is already a person " + name + " in the database.");
+    //             continue;
+    //         }
+    //         newPerson.uuid = this.generateNewUuid();
+    //         this.addPerson(newPerson);
+    //     }
+    // }
 }
 
 class Person {
