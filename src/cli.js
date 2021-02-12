@@ -68,6 +68,10 @@ async function Announce(model) {
 function loadPaired(content, model) {
     content.split("\n").forEach(line => {
         const name = line.split(",")[0].trim()
+        if (model.getPersonByName(name)) {
+            console.error("Error: name " + name + " is already used!");
+            return;
+        }
         if (name !== "") {
             const newPerson = new Person().withName(name)
             model.addPerson(newPerson)
