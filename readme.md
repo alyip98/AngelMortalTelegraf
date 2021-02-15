@@ -23,6 +23,10 @@ You can view this again using `dump`
 Next, let participants know their unique IDs. It is fine to publicize all unique IDs. Participants will not need to know their `name`.  
 For ease of use, it is recommended to release a randomized order list of `participant - ID` pairings, while keeping `name` secret. This ensures anonymity  
 
+##Resetting data
+`nuke` deletes ALL data (locally, it doesn't delete telegram messages lol). You will need to stop and restart the node instance after using nuke. This works by deleting the storage file.
+
+
 #for users
 ##to start
 Start both bots. Then, message either one bot (not both) with `/r <ID>` to register. You should now be able to message both your angel and mortal.
