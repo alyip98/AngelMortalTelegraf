@@ -9,6 +9,8 @@ InputHandler = (model) => async (input) => {
     const command = tokens[0].toLowerCase()
     const args = tokens.slice(1)
     switch (command) {
+        // TODO: add command to save ID pairings to file
+
         // case "load":
         //    TODO: fix load circular
 
