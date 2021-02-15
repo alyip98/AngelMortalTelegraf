@@ -11,7 +11,7 @@ RegisterHandler = async (ctx) => {
     const re = /\/r(?:egister)? (\w+)/g
     const parsed = re.exec(ctx.message.text)
     if (!parsed) {
-        return ctx.reply('register usage: /register <code>')
+        return ctx.reply(messages.RegisterReminder)
     }
     const uuid = parsed[1]
     const success = await TryRegister(ctx, uuid)
