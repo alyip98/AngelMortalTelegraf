@@ -1,4 +1,5 @@
-This bot allows users to message the bot as if they were messaging the other person. The bot is able to forward stickers and media.
+This bot allows users to message the bot as if they were messaging the other person. The bot is able to forward stickers and media.  
+The bot uses local storage (node-persist), hence it will not work on an ephemeral file system such as heroku.  
 
 #for admins
 Each participant is given a `name` (need not be related to real name nor telegram id), and automatically generated `uuid`. Details such as telegram ID will be automatically captured. angel/mortal pairings are captured when registering. Each person can have up to one angel and up to one mortal.
