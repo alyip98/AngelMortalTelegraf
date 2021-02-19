@@ -1,6 +1,6 @@
 data
-data.txt
 .idea
+*.txt
 
 # Logs
 logs

@@ -1,4 +1,5 @@
 const fs = require('fs')
+const storage = require("node-persist");
 const {Person, Model} = require("./model");
 
 InputHandler = (model) => async (input) => {
@@ -8,14 +9,24 @@ InputHandler = (model) => async (input) => {
     const command = tokens[0].toLowerCase()
     const args = tokens.slice(1)
     switch (command) {
-        case "load":
-            model.copy(await LoadCommand(args[0], Boolean(args[1])))
-            console.log(model.dumpUuids())
+        // TODO: add command to save ID pairings to file
+
+        // case "load":
+        //    TODO: fix load circular
+
+        //     model.copyPeopleFrom(await LoadCommand(args[0], false, model));
+        //     console.log(model.dumpUuids())
+        //     model.saveToStorage()
+        //     breduak;
+        case "loadpaired":
+            await LoadCommand(args[0], true, model);
+            // console.log(model.dumpUuids())
             model.saveToStorage()
-            break
+            break;
         case "list":
         case "ls":
         case "show":
+            //TODO: show telegram ID
             ListAll(model, ...args)
             break
         case 'dump':
@@ -30,6 +41,14 @@ InputHandler = (model) => async (input) => {
         case "deregister":
             Deregister(model, args[0])
             break
+        //TODO: add save to storage
+        //TODO: add command to print registered participants and their ID
+        case "nuke":
+            // TODO: check for confirmation
+            // delete all node persist data
+            await storage.defaultInstance.clear();
+            console.log("All data deleted. Restart the app to take effect.");
+            break;
         default:
             console.log("Unknown command", command)
     }
@@ -50,35 +69,39 @@ async function Announce(model) {
     console.log('wip command')
 }
 
-function loadPaired(content) {
-    const model = new Model();
+// loadpaired data.txt
+function loadPaired(content, model) {
     content.split("\n").forEach(line => {
         const name = line.split(",")[0].trim()
+        if (model.getPersonByName(name)) {
+            console.error("Error: name " + name + " is already used!");
+            return;
+        }
         if (name !== "") {
-            console.log(name)
-            const person = new Person().withName(name)
-            model.addPerson(person)
+            const newPerson = new Person().withName(name)
+            model.addPerson(newPerson)
+            console.log(newPerson.name + " - " + newPerson.uuid);
         }
     })
-    model.generateUuids()
+    //TODO: print new uuids
 
-    // load data.txt true
     content.split("\n").forEach(line => {
-        if (line.trim() === "") return;
-        const angel = line.split(",")[0].trim()
-        const mortal = line.split(",")[1].trim()
-        if (angel !== "" && mortal !== "") {
-            console.log(`${angel}-${mortal}`)
-            const a = model.getPersonByName(angel)
-            const m = model.getPersonByName(mortal)
-            // console.log(a, m)
-            a.mortal = m.uuid
-            m.angel = a.uuid
-        } else {
+        if (line.trim() === "") {
+            return;
+        }
+        const angelName = line.split(",")[0].trim()
+        const mortalName = line.split(",")[1].trim()
+        if (angelName === "" || mortalName === "") {
             console.error("Invalid line: " + line)
+        } else {
+            console.log(`${angelName}-${mortalName}`)
+            const angel = model.getPersonByName(angelName)
+            const mortal = model.getPersonByName(mortalName)
+            // console.log(a, m)
+            angel.mortal = mortal.uuid
+            mortal.angel = angel.uuid
         }
     })
-    return model
 }
 
 function loadCircular(content) {
@@ -90,16 +113,16 @@ function loadCircular(content) {
             model.addPerson(person)
         }
     })
-    model.generateUuids()
+    // model.generateUuids()
     model.setupAMRefs()
     return model
 }
 
-async function LoadCommand(path, paired = false) {
+async function LoadCommand(path, paired = false, model) {
     console.log(`Loading data from ${path}`)
     const content = fs.readFileSync(path, {encoding: "utf8"});
 
-    return paired ? loadPaired(content) : loadCircular(content)
+    paired ? loadPaired(content, model) : loadCircular(content)
 }
 
 async function ListAll(model, ...args) {
@@ -107,7 +130,8 @@ async function ListAll(model, ...args) {
     out += 'userid | name | mortal\'s name | registered?\n'
     out += (model.getPeople().map(person => {
         const mortal = model.getPersonByUuid(person.mortal)
-        return `${person.uuid} | ${person.name} | ${mortal.name} | ${person.isRegistered()}`
+        const mortalName = mortal === null ? "--" : mortal.name;
+        return `${person.uuid} | ${person.name} | ${mortalName} | ${person.isRegistered()}`
     }).join("\n"))
     if (args[0]) {
         fs.writeFileSync(args[0], out)

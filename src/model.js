@@ -15,7 +15,8 @@ class Model {
     }
 
     addPerson(person) {
-        this.people.push(person)
+        person.uuid = this.generateNewUuid();
+        this.people.push(person);
     }
 
     getPersonByName(name) {
@@ -61,20 +62,18 @@ class Model {
         this.store.setItem('data', this.toJson())
     }
 
-    // TODO: ensure uniqueness
-    // TODO: add option to not generate if already generated
-    generateUuids() {
-        function generateUuid() {
-            return Math.floor(Math.random() * 900000000 + 100000000).toString()
-        }
-        this.people.forEach(person => {
-            person.uuid = generateUuid()
-        })
+    generateNewUuid() {
+        const existingIDs = this.people.map(p => p.uuid);
+        let newID;
+        do {
+            newID = Math.floor(Math.random() * 900000000 + 100000000).toString();
+        } while (existingIDs.includes(newID))
+        return newID;
     }
 
     setupAMRefs() {
         for (let i = 0; i < this.people.length; i++) {
-            const j = (i + 1)%this.people.length
+            const j = (i + 1) % this.people.length
             this.people[i].mortal = this.people[j].uuid
             this.people[j].angel = this.people[i].uuid
         }
@@ -84,10 +83,25 @@ class Model {
         return this.people.map(person => `${person.name},${person.uuid}`).join("\n")
     }
 
-    copy(other) {
-        this.people = other.people
-        // this.store = other.store
+    hasPersonWithName(name) {
+        for (const person of this.people) {
+            if (name === person.name) {
+                return true;
+            }
+        }
+        return false;
     }
+
+    // copyPeopleFrom(other) {
+    //     for (const newPerson of other.people) {
+    //         if (this.hasPersonWithName(newPerson.name)) {
+    //             console.warn("Error: there is already a person " + name + " in the database.");
+    //             continue;
+    //         }
+    //         newPerson.uuid = this.generateNewUuid();
+    //         this.addPerson(newPerson);
+    //     }
+    // }
 }
 
 class Person {
@@ -138,11 +152,11 @@ class Person {
 
     static fromJson(obj) {
         const person = new Person()
-        person.uuid= obj.uuid
-        person.name= obj.name
-        person.username= obj.username
+        person.uuid = obj.uuid
+        person.name = obj.name
+        person.username = obj.username
         person.og = obj.og
-        person.telegramId= obj.telegramId
+        person.telegramId = obj.telegramId
         person.angel = obj.angel
         person.mortal = obj.mortal
 

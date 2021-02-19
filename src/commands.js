@@ -5,13 +5,15 @@ RegisterFailedHandler = async (ctx, uuid) => {
 }
 
 RegisterHandler = async (ctx) => {
+    //If this telegram user has already registerd to a UUID
     if (ctx.person) {
         return ctx.reply(messages.AlreadyRegisteredError(ctx.person.name))
     }
+    //TODO: add check for if UUID has been registered by another telegram user
     const re = /\/r(?:egister)? (\w+)/g
     const parsed = re.exec(ctx.message.text)
     if (!parsed) {
-        return ctx.reply('register usage: /register <code>')
+        return ctx.reply(messages.RegisterReminder)
     }
     const uuid = parsed[1]
     const success = await TryRegister(ctx, uuid)
