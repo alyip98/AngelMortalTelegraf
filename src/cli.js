@@ -26,6 +26,7 @@ InputHandler = (model) => async (input) => {
         case "list":
         case "ls":
         case "show":
+            //TODO: show telegram ID
             ListAll(model, ...args)
             break
         case 'dump':
@@ -41,6 +42,7 @@ InputHandler = (model) => async (input) => {
             Deregister(model, args[0])
             break
         //TODO: add save to storage
+        //TODO: add command to print registered participants and their ID
         case "nuke":
             // TODO: check for confirmation
             // delete all node persist data
