@@ -31,12 +31,11 @@ c - 098234752
 ```
 You can view this again using `dump`  
 
-Next, let participants know their unique IDs. It is fine to publicize all unique IDs. Participants will not need to know their `name`.  
-For ease of use, it is recommended to release a randomized order list of `participant - ID` pairings, while keeping `name` secret. This ensures anonymity  
+Next, let participants know their unique IDs. It is fine to publicize all unique IDs.
+For ease of use, it is recommended to release a (randomized order) list of `participant` and `ID` pairings. This ensures anonymity  
 
 ##Resetting data
 `nuke` deletes ALL data (locally, it doesn't delete telegram messages lol). You will need to stop and restart the node instance after using nuke. This works by deleting the storage file.
-
 
 #for users
 ##to start
@@ -44,6 +43,11 @@ Start both bots. Then, message either one bot (not both) with `/r <ID>` to regis
 
 #Message you can use to introduce the bot
 Hi participants,  
-The angel and mortal bots are available for you to message your partners anonymously. You can message the bot as if you were messaging the other person directly. The bot is able to forward stickers and media.  
+The angel and mortal bots are available for you to message your partners anonymously.
+<angel bot username>
+<mortal bot username>
+You can message the bot as if you were messaging the other person directly. The bot is able to forward stickers and media. Please do *not* send files/attachments
 
 I hope that you will continue to deliver heartfelt handwritten notes while sharing photos of your gifts/pranks in this group, and at the same time enhance your experience by using the bot to message your partner as needed, whether it is to let them know to collect your response, or to have a back and forth conversation.
+
+If you registered with the wrong ID (it should be your own name, not your mortal's), use /deregister to deregister
