@@ -1,9 +1,9 @@
 This bot allows users to message the bot as if they were messaging the other person. The bot is able to forward stickers and media.  
 The bot uses local storage (node-persist), hence it will not work on an ephemeral file system such as heroku.  
 
-#for admins
+# for admins
 Each participant is given a `name` (need not be related to real name nor telegram id), and automatically generated `uuid`. Details such as telegram ID will be automatically captured. angel/mortal pairings are captured when registering. Each person can have up to one angel and up to one mortal.
-##Set up
+## Set up
 Decide on a bot name prefix, for example `angel-mortals-2022`.  
 Create two telegram bots (through botfather), namely <prefix>_mortal_bot and <prefix>_angel_bot.  
 Put the prefix and bot tokens into a `.env` file in the root directory with the format
@@ -13,7 +13,7 @@ ANGEL_BOT_TOKEN=
 MORTAL_BOT_TOKEN=
 ```
 
-##To add participants
+## To add participants
 Use `loadpaired <filename>` to load pairs.  
 File should be a text file, containing pairs in the format `<angel>, <mortal>`  
 Names will automatically be captured. A unique ID will be generated for each name.  
@@ -34,14 +34,14 @@ You can view this again using `dump`
 Next, let participants know their unique IDs. It is fine to publicize all unique IDs.
 For ease of use, it is recommended to release a (randomized order) list of `participant` and `ID` pairings. This ensures anonymity  
 
-##Resetting data
+## Resetting data
 `nuke` deletes ALL data (locally, it doesn't delete telegram messages lol). You will need to stop and restart the node instance after using nuke. This works by deleting the storage file.
 
-#for users
-##to start
+# for users
+## to start
 Start both bots. Then, message either one bot (not both) with `/r <ID>` to register. You should now be able to message both your angel and mortal.
 
-#Message you can use to introduce the bot
+# Message you can use to introduce the bot
 Hi participants,  
 The angel and mortal bots are available for you to message your partners anonymously.
 <angel bot username>
