@@ -5,7 +5,7 @@ The bot uses local storage (node-persist), hence it will not work on an ephemera
 Each participant is given a `name` (need not be related to real name nor telegram id), and automatically generated `uuid`. Details such as telegram ID will be automatically captured. angel/mortal pairings are captured when registering. Each person can have up to one angel and up to one mortal.
 ## Set up
 Decide on a bot name prefix, for example `angel-mortals-2022`.  
-Create two telegram bots (through botfather), namely <prefix>_mortal_bot and <prefix>_angel_bot.  
+Create two telegram bots (through botfather), namely \<prefix>_mortal_bot and \<prefix>_angel_bot.  
 Put the prefix and bot tokens into a `.env` file in the root directory with the format
 ```
 PREFIX=angel-mortals-2022
@@ -44,8 +44,8 @@ Start both bots. Then, message either one bot (not both) with `/r <ID>` to regis
 # Message you can use to introduce the bot
 Hi participants,  
 The angel and mortal bots are available for you to message your partners anonymously.
-<angel bot username>
-<mortal bot username>
+\<angel bot username>
+\<mortal bot username>
 You can message the bot as if you were messaging the other person directly. The bot is able to forward stickers and media. Please do *not* send files/attachments
 
 I hope that you will continue to deliver heartfelt handwritten notes while sharing photos of your gifts/pranks in this group, and at the same time enhance your experience by using the bot to message your partner as needed, whether it is to let them know to collect your response, or to have a back and forth conversation.
