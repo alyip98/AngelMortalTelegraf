@@ -28,16 +28,18 @@ RegisterSuccessHandler = async (ctx) => {
     await ctx.reply(messages.RegisterSuccess(person.name, ctx.chatTarget))
 
     await ctx.reply(messages.ReferToBot(ctx.chatAs))
-    if (!ctx.isAngel) {
-        await ctx.reply(messages.StatusHint)
-    }
+    // if (!ctx.isAngel) {
+    //     await ctx.reply(messages.StatusHint)
+    // }
 
     if (angel.isRegistered()) {
         await ctx.model.mortalBot.telegram.sendMessage(angel.telegramId, messages.RegisteredNotifier('mortal'))
+        await ctx.model.mortalBot.telegram.sendMessage(angel.telegramId, person.getIntro(), {parse_mode: "HTML"})
     }
 
     if (mortal.isRegistered()) {
         await ctx.model.angelBot.telegram.sendMessage(mortal.telegramId, messages.RegisteredNotifier('angel'))
+        await ctx.model.angelBot.telegram.sendMessage(mortal.telegramId, person.getIntroForMortal(), {parse_mode: "HTML"})
     }
 }
 
@@ -72,7 +74,7 @@ DeregisterHandler = async (ctx) => {
 
 MessageHandler = async (ctx) => {
     const target = ctx.isAngel ? ctx.angel : ctx.mortal
-    if (target.isRegistered()) {
+    if (target && target.isRegistered()) {
         await ctx.otherBot.telegram.sendMessage(target.telegramId, ctx.message.text)
     } else {
         await ctx.reply(messages.UnregisteredTarget(ctx.chatTarget))

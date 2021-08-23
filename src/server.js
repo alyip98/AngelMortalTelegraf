@@ -1,43 +1,51 @@
-const Commands = require("./commands");
+const express = require("express");
 const {Model} = require("./model");
-const Middleware = require("./middleware");
-const {Telegraf} = require('telegraf');
-require('dotenv').config();
 
-async function start(model) {
-    if (model === null)
-        throw new Error('no model provided')
-        // model = new Model();
+function tmp() {
+    let out = ""
+    out += 'userid | name | mortal\'s name | registered?\n'
+    out += (model.getPeople().map(person => {
+        const mortal = model.getPersonByUuid(person.mortal)
+        return `${person.uuid} | ${person.name} | ${mortal.name} | ${person.isRegistered()}`
+    }).join("\n"))
+}
 
-    const angelBot = new Telegraf(process.env.ANGEL_BOT_TOKEN);
-    const mortalBot = new Telegraf(process.env.MORTAL_BOT_TOKEN);
+function init(model) {
+    const apiServer = express()
 
-    model.angelBot = angelBot;
-    model.mortalBot = mortalBot;
+    apiServer.post('/deregister/:id', (req, res, next) => {
+        const uuid = req.params["id"]
+        const person = model.getPersonByUuid(uuid)
+        console.log(`Deregistering ${person.name}`)
+        try {
+            if (person) {
+                person.deregister()
+                res.send("Deregistered ${person.uuid} (${person.name}) successfully")
+            } else {
+                res.send(`Person ${uuid} does not exist`)
+            }
+        } catch (e) {
+            res.send(`Encountered error ${e} while deregistering ${person.uuid} (${person.name})`)
+        }
 
-    angelBot.use(Middleware.Settings(true, mortalBot))
-    angelBot._name = "AngelBot"
-    mortalBot.use(Middleware.Settings(false, angelBot))
-    mortalBot._name = "MortalBot"
 
-    const bots = [angelBot, mortalBot]
+    })
 
-    bots.forEach(bot => {
-        bot.use(Middleware.WithModel(model), Middleware.ErrorHandler, Middleware.OnlyPrivate, Middleware.UserId, Middleware.CodeFilter)
-        bot.start(Commands.StartHandler)
-        bot.help(Commands.HelpHandler)
-        bot.command(['register', 'r'], Commands.RegisterHandler)
-        bot.use(Middleware.RequireRegister)
-        bot.command(['deregister', 'd'], Commands.DeregisterHandler)
-        bot.command('mortal', Commands.StatusHandler)
-        bot.on('sticker', Commands.StickerHandler)
-        bot.on('photo', Commands.PhotoHandler)
-        bot.on('video', Commands.VideoHandler)
-        bot.on('voice', Commands.VoiceHandler)
-        bot.on('video_note', Commands.VideoNoteHandler)
-        bot.on('message', Commands.MessageHandler)
-        bot.launch().then(() => console.log(bot._name + " started")).catch(console.error)
+    apiServer.get('/', (req, res, next) => {
+        res.send('Hello World!')
+        model.getPeople().map(person => {
+            return `<tr>
+                        <td>${person.name}</td>
+                    </tr>`
+        })
+        next()
+    })
+
+
+
+    apiServer.listen(port, () => {
+        console.log(`API server listening at http://localhost:${port}`)
     })
 }
 
-module.exports = {start};
+module.exports = {init}

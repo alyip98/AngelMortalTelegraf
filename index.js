@@ -1,14 +1,13 @@
-const server = require("./src/server");
+const server = require("./src/bots");
 const cli = require("./src/cli");
 const {Model} = require("./src/model");
 const readline = require('readline').createInterface({
     input: process.stdin,
     output: process.stdout
 });
+const express = require("express");
 
-function setupCLI() {
-
-}
+const port = 8080
 
 async function main() {
     const model = await Model.loadFromStorage()

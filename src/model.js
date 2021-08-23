@@ -70,9 +70,13 @@ class Model {
         })
     }
 
-    setupAMRefs() {
+    setupAMRefs(groupSize) {
+        groupSize = groupSize || this.people.length
+        const n = this.people.length
+        const gs = groupSize
         for (let i = 0; i < this.people.length; i++) {
-            const j = (i + 1)%this.people.length
+            let k = Math.floor(i/gs)
+            let j = ((i + 1) % n) % gs + k * gs
             this.people[i].mortal = this.people[j].uuid
             this.people[j].angel = this.people[i].uuid
         }
@@ -84,7 +88,6 @@ class Model {
 
     copy(other) {
         this.people = other.people
-        // this.store = other.store
     }
 }
 
@@ -92,21 +95,43 @@ class Person {
     constructor() {
         this.uuid = ""
         this.name = ""
-        this.username = ""
-        this.og = ""
+        this.roomNum = ""
         this.telegramId = ""
+        this.pranked = false
+        this.twoTruths = false
+        this.diet = false
         this.angel = null;
         this.mortal = null;
         return this;
     }
 
-    withName(name) {
-        this.name = name;
-        return this;
+    getIntro() {
+        return `
+${this.name.trim()} (${this.roomNum.trim()})
+<u>Two truths and a lie about me</u>
+${this.twoTruths.trim()}
+
+<u>Can be pranked</u>
+${this.pranked ? "Yes" : "No"}
+
+<u>Dietary Requirements</u>
+${this.diet.trim()}`
     }
 
-    withOg(og) {
-        this.og = og;
+    getIntroForMortal() {
+        return `
+<u>Two truths and a lie about me</u>
+${this.twoTruths.trim()}
+
+<u>Can be pranked</u>
+${this.pranked ? "Yes" : "No"}
+
+<u>Dietary Requirements</u>
+${this.diet.trim()}`
+    }
+
+    withName(name) {
+        this.name = name;
         return this;
     }
 
@@ -123,27 +148,19 @@ class Person {
     }
 
     toJson() {
-        return {
-            uuid: this.uuid,
-            name: this.name,
-            username: this.username,
-            og: this.og,
-            telegramId: this.telegramId,
-            angel: this.angel || null,
-            mortal: this.mortal || null,
-        }
+        const data = {}
+        const person = this
+        Object.keys(person).forEach(function (key) {
+            data[key] = person[key];
+        });
+        return data
     }
 
     static fromJson(obj) {
         const person = new Person()
-        person.uuid= obj.uuid
-        person.name= obj.name
-        person.username= obj.username
-        person.og = obj.og
-        person.telegramId= obj.telegramId
-        person.angel = obj.angel
-        person.mortal = obj.mortal
-
+        Object.keys(obj).forEach(function (key) {
+            person[key] = obj[key];
+        });
         return person
     }
 }
