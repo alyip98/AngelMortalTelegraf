@@ -107,6 +107,8 @@ class Person {
 
     getIntro() {
         return `
+hey there!! let's meet your mortal :)
+
 ${this.name.trim()} (${this.roomNum.trim()})
 <u>Two truths and a lie about me</u>
 ${this.twoTruths.trim()}
@@ -121,13 +123,7 @@ ${this.diet.trim()}`
     getIntroForMortal() {
         return `
 <u>Two truths and a lie about me</u>
-${this.twoTruths.trim()}
-
-<u>Can be pranked</u>
-${this.pranked ? "Yes" : "No"}
-
-<u>Dietary Requirements</u>
-${this.diet.trim()}`
+${this.twoTruths.trim()}`
     }
 
     withName(name) {
