@@ -143,8 +143,9 @@ StatusHandler = async (ctx) => {
     const person = ctx.person
     const model = ctx.model
     const mortal = model.getPersonByUuid(person.mortal)
-    let mortalName = mortal.name
-    ctx.reply(messages.StatusMessage(person.name, mortalName))
+    ctx.reply(person.mortal.getIntro())
+    // let mortalName = mortal.name
+    // ctx.reply(messages.StatusMessage(person.name, mortalName))
 }
 
 HelpHandler = async (ctx) => {
