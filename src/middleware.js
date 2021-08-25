@@ -45,9 +45,9 @@ RequireRegister = async (ctx, next) => {
         let isCommand = false;
         if (util.isText(ctx)) {
             success = await TryRegister(ctx, ctx.message.text)
-            isCommand = ctx.message.text.startsWith("/")
+            // isCommand = ctx.message.text.startsWith("/")
         }
-        if (!success && !isCommand)
+        if (!success)
             return ctx.reply(messages.RegisterReminder);
         await next()
     }

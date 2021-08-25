@@ -143,7 +143,7 @@ StatusHandler = async (ctx) => {
     const person = ctx.person
     const model = ctx.model
     const mortal = model.getPersonByUuid(person.mortal)
-    ctx.reply(person.mortal.getIntro())
+    ctx.reply(mortal.getIntro(), {parse_mode: "HTML"})
     // let mortalName = mortal.name
     // ctx.reply(messages.StatusMessage(person.name, mortalName))
 }
