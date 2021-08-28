@@ -30,6 +30,9 @@ InputHandler = (model) => async (input) => {
         case "deregister":
             Deregister(model, args[0])
             break
+        case "rename":
+            Rename(model, ...args)
+            break
         default:
             console.log("Unknown command", command)
     }
@@ -43,6 +46,17 @@ async function Deregister(model, uuid) {
         model.saveToStorage()
     } else {
         console.log("No one with that code found")
+    }
+}
+
+async function Rename(model, uuid, newName) {
+    const person = model.getPersonByUuid(uuid)
+    if (person) {
+        console.log(`Renamed ${person.name} => ${newName}`)
+        person.name = newName
+        model.saveToStorage()
+    } else {
+        console.log(`No one with uuid: ${uuid} found`)
     }
 }
 
