@@ -106,7 +106,7 @@ class Person {
     }
 
     getIntro() {
-        return `hey there!! your mortal is ${this.name.trim()}`
+        return `hey! your mortal is ${this.name.trim()}`
     }
 
     getIntroForMortal() {
