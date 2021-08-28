@@ -71,7 +71,12 @@ function loadPaired(content) {
             console.log(`${angel}-${mortal}`)
             const a = model.getPersonByName(angel)
             const m = model.getPersonByName(mortal)
-            // console.log(a, m)
+            if (!a) console.error(`Missing angel reference : ${angel} -> ${a}`)
+            if (!m) console.error(`Missing angel reference : ${mortal} -> ${m}`)
+            if (!a || !m) return
+            if (a.mortal !== null) console.error(`${a.name} already has mortal : ${model.getPersonByUuid(a.mortal).name}`)
+            if (m.angel !== null) console.error(`${m.name} already has angel : ${model.getPersonByUuid(m.angel).name}`)
+
             a.mortal = m.uuid
             m.angel = a.uuid
         } else {
