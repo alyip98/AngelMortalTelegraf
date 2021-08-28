@@ -49,11 +49,12 @@ async function Deregister(model, uuid) {
     }
 }
 
-async function Rename(model, uuid, newName) {
+async function Rename(model, uuid, ...newName) {
+    let name = newName.join(" ")
     const person = model.getPersonByUuid(uuid)
     if (person) {
-        console.log(`Renamed ${person.name} => ${newName}`)
-        person.name = newName
+        console.log(`Renamed ${person.name} => ${name}`)
+        person.name = name
         model.saveToStorage()
     } else {
         console.log(`No one with uuid: ${uuid} found`)
