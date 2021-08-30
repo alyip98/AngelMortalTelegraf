@@ -55,12 +55,9 @@ RequireRegister = async (ctx, next) => {
 
 OnlyPrivate = async (ctx, next) => {
     let chat = ctx.chat;
-    if (chat.type !== 'private') {
-        try {
-            await ctx.reply(messages.NoGroupChats)
-            await ctx.leaveChat(chat.id)
-        } catch (e) {
-        }
+    if (chat !== undefined && chat.type !== 'private') {
+        await ctx.reply(messages.NoGroupChats)
+        await ctx.leaveChat(chat.id)
         return
     }
     await next()
