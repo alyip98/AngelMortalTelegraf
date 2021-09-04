@@ -1,8 +1,8 @@
 const storage = require('node-persist');
 storage.init({
     'dir': 'data',
-    stringify: s => Buffer.from(JSON.stringify(s)).toString('base64'),
-    parse: s => JSON.parse(Buffer.from(s, 'base64').toString('utf8')),
+    stringify: s => JSON.stringify(s, null, 2),
+    parse: s => JSON.parse(s),
     encoding: 'utf8',
     // logging: true,
     ttl: false,
