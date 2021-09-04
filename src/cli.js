@@ -48,6 +48,9 @@ InputHandler = (model) => async (input) => {
             // delete all node persist data
             await storage.defaultInstance.clear();
             console.log("All data deleted. Restart the app to take effect.");
+            break
+        case "save":
+            model.saveToStorage()
             break;
         default:
             console.log("Unknown command", command)
