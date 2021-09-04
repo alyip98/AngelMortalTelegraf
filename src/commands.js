@@ -52,7 +52,7 @@ TryRegister = async (ctx, uuid) => {
         return false
     }
 
-    person.register(ctx.from.id)
+    person.register(ctx.from)
     ctx.person = person
     model.saveToStorage()
 

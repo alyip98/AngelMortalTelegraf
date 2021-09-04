@@ -126,12 +126,14 @@ class Person {
         return this;
     }
 
-    register(telegramId) {
-        this.telegramId = telegramId;
+    register(usr) {
+        this.username = usr.username;
+        this.telegramId = usr.id;
     }
 
     deregister() {
-        this.telegramId = ""
+        this.telegramId = "";
+        this.username = "";
     }
 
     isRegistered() {
