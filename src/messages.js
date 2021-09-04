@@ -2,7 +2,7 @@ require('dotenv').config();
 const prefix = process.env.PREFIX || "anm";
 
 module.exports = {
-    RegisterReminder: 'To register, please enter \'`/r code`\' where code is your 9 digit code',
+    RegisterReminder: "To register, please enter \'`/r code`\' where code is your 9 digit code. For example: \'`/r 694206969`\'. Don\'t miss the space in between!",
     NoGroupChats: "Please don't add me to groups! Byeeee 👋",
     BotWelcome: (name, chatTarget) => `Welcome${name}! This bot will act as a messaging platform between you and your ${chatTarget}. Simply send a message here and we will pass it to your ${chatTarget}`,
     ReferToBot: (chatAs) => `Please go to the ${chatAs}-bot at @${prefix}_${chatAs.toLowerCase()}_bot to start chatting with your ${chatAs} as well. You do not need to register again.`,

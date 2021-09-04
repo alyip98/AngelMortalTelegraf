@@ -86,7 +86,12 @@ MessageHandler = async (ctx) => {
         }
         return await ctx.otherBot.telegram.sendMessage(target.telegramId, ctx.message.text)
     } else {
-        await ctx.reply(messages.UnregisteredTarget(ctx.chatTarget))
+        //Handle user possibly trying to register but in the wrong format
+        if (ctx.message.text.startsWith("/r")) {
+            await ctx.replyWithMarkdown(messages.RegisterReminder)
+        } else {
+            await ctx.reply(messages.UnregisteredTarget(ctx.chatTarget))
+        }
     }
 }
 
