@@ -7,7 +7,7 @@ require('dotenv').config();
 async function start(model) {
     if (model === null)
         throw new Error('no model provided')
-        // model = new Model();
+    // model = new Model();
 
     const angelBot = new Telegraf(process.env.ANGEL_BOT_TOKEN);
     const mortalBot = new Telegraf(process.env.MORTAL_BOT_TOKEN);

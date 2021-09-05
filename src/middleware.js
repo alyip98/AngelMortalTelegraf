@@ -70,11 +70,11 @@ ErrorHandler = async (ctx, next) => {
     try {
         await next()
     } catch (e) {
-        Telegraf.log(console.error)(ctx, ()=>console.error(e))
+        Telegraf.log(console.error)(ctx, () => console.error(e))
     }
 }
 
-Settings = (isAngel=true, otherBot) => async(ctx, next) => {
+Settings = (isAngel = true, otherBot) => async (ctx, next) => {
     ctx.isAngel = isAngel
     ctx.isMortal = !isAngel
     ctx.otherBot = otherBot
