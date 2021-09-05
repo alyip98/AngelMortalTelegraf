@@ -105,6 +105,7 @@ StickerHandler = async (ctx) => {
 }
 
 PhotoHandler = async (ctx) => {
+    //TODO: photos forwarded are super small thumbnail, not the original photo sent
     const photos = ctx.message.photo
     const caption = ctx.message.caption || ""
     const target = ctx.isAngel ? ctx.angel : ctx.mortal

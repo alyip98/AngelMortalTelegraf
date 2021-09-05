@@ -59,7 +59,8 @@ InputHandler = (model) => async (input) => {
 
 async function Deregister(model, uuid) {
     const person = model.getPersonByUuid(uuid)
-    if (person) {
+    if (person) { //ID exists
+        //TODO: differentiate message based on whether person had registered
         console.log("Deregistered", person.name, uuid, person.telegramId)
         person.deregister()
         model.saveToStorage()
