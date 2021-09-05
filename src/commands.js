@@ -13,7 +13,7 @@ RegisterHandler = async (ctx) => {
     const re = /\/r(?:egister)? (\w+)/g
     const parsed = re.exec(ctx.message.text)
     if (!parsed) {
-        return ctx.reply(messages.RegisterReminder)
+        return ctx.replyWithMarkdown(messages.RegisterReminder)
     }
     const uuid = parsed[1]
     const success = await TryRegister(ctx, uuid)
@@ -152,7 +152,7 @@ VideoNoteHandler = async (ctx) => {
 
 StatusHandler = async (ctx) => {
     if (!ctx.isRegistered) {
-        return ctx.reply(messages.RegisterReminder)
+        return ctx.replyWithMarkdown(messages.RegisterReminder)
     }
     const person = ctx.person
     const model = ctx.model
@@ -170,7 +170,7 @@ StartHandler = async (ctx) => {
     const message = messages.BotWelcome(name, ctx.chatTarget)
     await ctx.reply(message)
     if (!ctx.isRegistered) {
-        await ctx.reply(messages.RegisterReminder)
+        await ctx.replyWithMarkdown(messages.RegisterReminder)
     } else {
         if (ctx.isMortal) {
             await ctx.reply(messages.StatusHint)
