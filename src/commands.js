@@ -110,6 +110,8 @@ PhotoHandler = async (ctx) => {
     const caption = ctx.message.caption || ""
     const target = ctx.isAngel ? ctx.angel : ctx.mortal
     if (target.isRegistered()) {
+        // photos array contains different file ids, with increasing image resolution
+        // access last file id for optimal quality
         const len = ctx.message.photo.length
         const fileLink = await ctx.telegram.getFileLink(photos[len - 1].file_id)
         await ctx.otherBot.telegram.sendPhoto(target.telegramId, {url: fileLink}, {caption})
