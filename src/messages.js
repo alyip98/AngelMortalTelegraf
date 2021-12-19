@@ -16,5 +16,6 @@ module.exports = {
     RegisterFailedGeneralError: (code) => `Failed to register with code ${code}`,
     HelpMessage: "This bot allows you to communicate with your angel/mortal anonymously.\nRegister with the code given to you by typing\n`/r <code>`\nOnce registered, you can send messages to your angel/mortal just by sending them here just like any other Telegram chat. Currently supported message types are text, stickers, photos and videos.",
     RegisteredNotifier: (chatTarget) => `Your ${chatTarget} has registered with the bot on Telegram. Happy chatting!`,
+    UnregisteredNotifier: (chatTarget) => `Your ${chatTarget} has not registered with the bot on Telegram. We'll let you know once they've registered!`,
     NotRegistered: "Not registered",
 };
