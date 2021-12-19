@@ -34,12 +34,16 @@ RegisterSuccessHandler = async (ctx) => {
 
     if (angel.isRegistered()) {
         await ctx.model.mortalBot.telegram.sendMessage(angel.telegramId, messages.RegisteredNotifier('mortal'))
-        await ctx.model.mortalBot.telegram.sendMessage(angel.telegramId, person.getIntro(), {parse_mode: "HTML"})
+        await ctx.model.angelBot.telegram.sendMessage(person.telegramId, messages.RegisteredNotifier('angel'))
+    } else {
+        await ctx.model.angelBot.telegram.sendMessage(person.telegramId, messages.UnregisteredNotifier('angel'))
     }
 
     if (mortal.isRegistered()) {
         await ctx.model.angelBot.telegram.sendMessage(mortal.telegramId, messages.RegisteredNotifier('angel'))
-        await ctx.model.angelBot.telegram.sendMessage(mortal.telegramId, person.getIntroForMortal(), {parse_mode: "HTML"})
+        await ctx.model.mortalBot.telegram.sendMessage(person.telegramId, messages.RegisteredNotifier('mortal'))
+    } else {
+        await ctx.model.mortalBot.telegram.sendMessage(person.telegramId, messages.UnregisteredNotifier('mortal'))
     }
 }
 
