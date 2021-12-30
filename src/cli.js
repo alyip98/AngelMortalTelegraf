@@ -23,6 +23,10 @@ InputHandler = (model) => async (input) => {
             // console.log(model.dumpUuids())
             model.saveToStorage()
             break;
+        // type validate <uuid> to validate relationships
+        case "validate":
+            ValidateRelationships(args[0], model)
+            break
         case "list":
         case "ls":
         case "show":
@@ -106,6 +110,47 @@ function loadPaired(content, model) {
             mortal.angel = angel.uuid
         }
     })
+}
+
+function ValidateRelationships(uuid, model) {
+    const person = model.getPersonByUuid(uuid);
+    //console.log(person);
+
+    const angelID = person.angel;
+    const angelValid = validateAngel(uuid, angelID, model);
+
+    const mortalID = person.mortal;
+    const mortalValid = validateMortal(uuid, mortalID, model);
+
+    if (angelValid && mortalValid) {
+        console.log("relationships valid");
+    } else {
+        console.log("invalid relationship detected");
+    }
+}
+
+// check if my angel's mortal is me
+function validateAngel(myID, angelID, model) {
+    const myAngel = model.getPersonByUuid(angelID);
+    if (myAngel.mortal == myID) {
+        //console.log("relationship valid");
+        return true;
+    } else {
+        console.log("invalid relationship with angel");
+        return false;
+    }
+}
+
+// check if my mortal's angel is me
+function validateMortal(myID, mortalID, model) {
+    const myMortal = model.getPersonByUuid(mortalID);
+    if (myMortal.angel == myID) {
+        //console.log("relationship valid");
+        return true;
+    } else {
+        console.log("invalid relationship with mortal");
+        return false;
+    }
 }
 
 function loadCircular(content) {
