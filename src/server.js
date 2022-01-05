@@ -35,6 +35,8 @@ async function start(model) {
         bot.on('video', Commands.VideoHandler)
         bot.on('voice', Commands.VoiceHandler)
         bot.on('video_note', Commands.VideoNoteHandler)
+        bot.on('animation', Commands.AnimationHandler) //gifs
+        bot.on('document', Commands.DocumentHandler)
         bot.on('message', Commands.MessageHandler)
         //TODO: handle sending files
         bot.launch().then(() => console.log(bot._name + " started")).catch(console.error)

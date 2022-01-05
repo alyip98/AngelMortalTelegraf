@@ -78,91 +78,107 @@ DeregisterHandler = async (ctx) => {
     await ctx.otherBot.telegram.sendMessage(telegramId, messages.DeregisterSuccess)
 }
 
+AnimationHandler = async (ctx) => {
+    const target = ctx.isAngel ? ctx.angel : ctx.mortal
+    if (!target.isRegistered()) {
+        await ctx.reply(messages.UnregisteredTarget(ctx.chatTarget))
+        return
+    }
+    const msg = ctx.update.message
+    const fileLink = await ctx.telegram.getFileLink(msg.animation.file_id)
+    return await ctx.otherBot.telegram.sendAnimation(target.telegramId, {url: fileLink})
+}
+
+DocumentHandler = async (ctx) => {
+    const target = ctx.isAngel ? ctx.angel : ctx.mortal
+    if (!target.isRegistered()) {
+        await ctx.reply(messages.UnregisteredTarget(ctx.chatTarget))
+        return
+    }
+    const msg = ctx.update.message
+    const fileLink = await ctx.telegram.getFileLink(msg.document.file_id)
+    return await ctx.otherBot.telegram.sendDocument(target.telegramId, {
+        url: fileLink,
+        filename: msg.document.file_name
+    })
+}
+
 MessageHandler = async (ctx) => {
     const target = ctx.isAngel ? ctx.angel : ctx.mortal
-    if (target && target.isRegistered()) {
-        const msg = ctx.update.message
-        if (ctx.updateSubTypes.indexOf("animation") !== -1) {
-            const fileLink = await ctx.telegram.getFileLink(msg.animation.file_id)
-            return await ctx.otherBot.telegram.sendAnimation(target.telegramId, {url: fileLink})
-        }
-        if (ctx.updateSubTypes.indexOf("document") !== -1) {
-            const fileLink = await ctx.telegram.getFileLink(msg.document.file_id)
-            return await ctx.otherBot.telegram.sendDocument(target.telegramId, {url: fileLink, filename: msg.document.file_name})
-        }
-        return await ctx.otherBot.telegram.sendMessage(target.telegramId, ctx.message.text)
-    } else {
+    if (!target || !target.isRegistered()) {
         //Handle user possibly trying to register but in the wrong format
-        if (ctx.message.text.startsWith("/r")) {
+        if (ctx.message.text && ctx.message.text.startsWith("/r")) {
             await ctx.replyWithMarkdown(messages.RegisterReminder)
         } else {
             await ctx.reply(messages.UnregisteredTarget(ctx.chatTarget))
         }
+        return
     }
+    return await ctx.otherBot.telegram.sendMessage(target.telegramId, ctx.message.text)
 }
 
 StickerHandler = async (ctx) => {
     const target = ctx.isAngel ? ctx.angel : ctx.mortal
-    if (target.isRegistered()) {
-        await ctx.otherBot.telegram.sendSticker(target.telegramId, ctx.message.sticker.file_id)
-    } else {
+    if (!target.isRegistered()) {
         await ctx.reply(messages.UnregisteredTarget(ctx.chatTarget))
+        return
     }
+    await ctx.otherBot.telegram.sendSticker(target.telegramId, ctx.message.sticker.file_id)
 }
 
 PhotoHandler = async (ctx) => {
-    //TODO: photos forwarded are super small thumbnail, not the original photo sent
-    const photos = ctx.message.photo
-    const caption = ctx.message.caption || ""
     const target = ctx.isAngel ? ctx.angel : ctx.mortal
-    if (target.isRegistered()) {
-        // photos array contains different file ids, with increasing image resolution
-        // access last file id for optimal quality
-        const len = ctx.message.photo.length
-        const fileLink = await ctx.telegram.getFileLink(photos[len - 1].file_id)
-        await ctx.otherBot.telegram.sendPhoto(target.telegramId, {url: fileLink}, {caption})
-    } else {
+    if (!target.isRegistered()) {
         await ctx.reply(messages.UnregisteredTarget(ctx.chatTarget))
+        return
     }
+    const photos = ctx.message.photo
+    // photos array contains different file ids, with increasing image resolution
+    const caption = ctx.message.caption || ""
+    // access last file id for optimal quality
+    const len = ctx.message.photo.length
+    const fileLink = await ctx.telegram.getFileLink(photos[len - 1].file_id)
+    await ctx.otherBot.telegram.sendPhoto(target.telegramId, {url: fileLink}, {caption})
 }
 
 VideoHandler = async (ctx) => {
+    const target = ctx.isAngel ? ctx.angel : ctx.mortal
+    if (!target.isRegistered()) {
+        await ctx.reply(messages.UnregisteredTarget(ctx.chatTarget))
+        return
+    }
     const video = ctx.message.video
     const caption = ctx.message.caption || ""
-    const target = ctx.isAngel ? ctx.angel : ctx.mortal
-    if (target.isRegistered()) {
-        const fileLink = await ctx.telegram.getFileLink(video.file_id)
-        await ctx.otherBot.telegram.sendVideo(target.telegramId, {url: fileLink}, {caption})
-    } else {
-        await ctx.reply(messages.UnregisteredTarget(ctx.chatTarget))
-    }
+    const fileLink = await ctx.telegram.getFileLink(video.file_id)
+    await ctx.otherBot.telegram.sendVideo(target.telegramId, {url: fileLink}, {caption})
 }
 
 VoiceHandler = async (ctx) => {
-    const voice = ctx.message.voice
     const target = ctx.isAngel ? ctx.angel : ctx.mortal
-    if (target.isRegistered()) {
-        const fileLink = await ctx.telegram.getFileLink(voice.file_id)
-        await ctx.otherBot.telegram.sendVoice(target.telegramId, {url: fileLink})
-    } else {
+    if (!target.isRegistered()) {
         await ctx.reply(messages.UnregisteredTarget(ctx.chatTarget))
+        return
     }
+    const voice = ctx.message.voice
+    const fileLink = await ctx.telegram.getFileLink(voice.file_id)
+    await ctx.otherBot.telegram.sendVoice(target.telegramId, {url: fileLink})
 }
 
 VideoNoteHandler = async (ctx) => {
-    const video = ctx.message.video_note
     const target = ctx.isAngel ? ctx.angel : ctx.mortal
-    if (target.isRegistered()) {
-        const fileLink = await ctx.telegram.getFileLink(video.file_id)
-        await ctx.otherBot.telegram.sendVideoNote(target.telegramId, {url: fileLink})
-    } else {
+    if (!target.isRegistered()) {
         await ctx.reply(messages.UnregisteredTarget(ctx.chatTarget))
+        return
     }
+    const video = ctx.message.video_note
+    const fileLink = await ctx.telegram.getFileLink(video.file_id)
+    await ctx.otherBot.telegram.sendVideoNote(target.telegramId, {url: fileLink})
 }
 
 StatusHandler = async (ctx) => {
     if (!ctx.isRegistered) {
-        return ctx.replyWithMarkdown(messages.RegisterReminder)
+        await ctx.replyWithMarkdown(messages.RegisterReminder)
+        return
     }
     const person = ctx.person
     const model = ctx.model
@@ -181,10 +197,10 @@ StartHandler = async (ctx) => {
     await ctx.reply(message)
     if (!ctx.isRegistered) {
         await ctx.replyWithMarkdown(messages.RegisterReminder)
-    } else {
-        if (ctx.isMortal) {
-            await ctx.reply(messages.StatusHint)
-        }
+        return
+    }
+    if (ctx.isMortal) {
+        await ctx.reply(messages.StatusHint)
     }
 }
 
@@ -202,5 +218,7 @@ module.exports = {
     PhotoHandler,
     VideoHandler,
     VideoNoteHandler,
-    VoiceHandler
+    VoiceHandler,
+    AnimationHandler,
+    DocumentHandler,
 }
