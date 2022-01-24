@@ -52,3 +52,5 @@ $ load namelist.txt
 > Donut,657742557
 
 ``` 
+
+Send the code to its corresponding participant so that they can register on the bot and start chatting!.
