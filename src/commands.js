@@ -152,7 +152,7 @@ StatusHandler = async (ctx) => {
     const person = ctx.person
     const model = ctx.model
     const mortal = model.getPersonByUuid(person.mortal)
-    ctx.reply(mortal.getIntro(), {parse_mode: "MarkdownV2"})
+    return ctx.reply(mortal.getIntro(), {parse_mode: "MarkdownV2"})
 }
 
 AngelHandler = async (ctx) => {
@@ -162,7 +162,7 @@ AngelHandler = async (ctx) => {
     const person = ctx.person
     const model = ctx.model
     const angel = model.getPersonByUuid(person.angel)
-    ctx.reply(angel.getIntroForMortal(), {parse_mode: "MarkdownV2"})
+    return ctx.reply(angel.getIntroForMortal(), {parse_mode: "MarkdownV2"})
 }
 
 HelpHandler = async (ctx) => {

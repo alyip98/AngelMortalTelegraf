@@ -85,7 +85,10 @@ ErrorHandler = async (ctx, next) => {
     try {
         await next()
     } catch (e) {
-        logger.error(e, ctx)
+        logger.error({
+            "error": e,
+            "context": ctx.update
+        })
     }
 }
 
