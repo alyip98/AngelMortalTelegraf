@@ -113,11 +113,11 @@ ${this.pranked ? "Can prank ✅" : "Pls don't prank ❌"}
 Major 🎓: ${this.major}
 2 truths and a lie 🙊:
 ${this.twoTruths}
-Dietary requirements 🍴: ${this.diet}`
+Dietary requirements 🍴: ${this.diet}`.replace("<", "\\<")
     }
 
     getIntroForMortal() {
-        return "I can't tell you who your angel is but here's a hint (one of these statements is false):\n" + this.twoTruths
+        return "I can't tell you who your angel is but here's a hint (one of these statements is false):\n" + this.twoTruths.replace("<", "\\<")
     }
 
     withName(name) {
