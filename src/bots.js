@@ -23,7 +23,7 @@ async function start(model) {
     const bots = [angelBot, mortalBot]
 
     bots.forEach(bot => {
-        bot.use(Middleware.WithModel(model), Middleware.ErrorHandler, Middleware.OnlyPrivate, Middleware.UserId, Middleware.CodeFilter)
+        bot.use(Middleware.ErrorHandler, Middleware.WithModel(model), Middleware.OnlyPrivate, Middleware.UserId, Middleware.CodeFilter)
         bot.start(Commands.StartHandler)
         bot.help(Commands.HelpHandler)
         bot.command(['register', 'r'], Commands.RegisterHandler)
@@ -37,6 +37,7 @@ async function start(model) {
         bot.on('voice', Commands.VoiceHandler)
         bot.on('video_note', Commands.VideoNoteHandler)
         bot.on('message', Commands.MessageHandler)
+        bot.catch(console.error)
         bot.launch().then(() => console.log(bot._name + " started")).catch(console.error)
     })
 }
