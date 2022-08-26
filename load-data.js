@@ -12,7 +12,7 @@ async function main() {
     const results = [];
 
     await fs.createReadStream('data.csv')
-        .pipe(csv(["_", "name", "_", "roomNum", "pranked", "twoTruths", "diet"]))
+        .pipe(csv(["_", "name", "_", "roomNum", "pranked", "major", "twoTruths", "diet"]))
         .on('data', (data) => {
             if (data.name === "Name") return
             const newPerson = new Person();
@@ -26,9 +26,8 @@ async function main() {
                         newPerson[key] = data[key] === "Yes"
                         break
                     default:
-                        newPerson[key] = data[key]
+                        newPerson[key] = data[key].trim()
                 }
-
             }
             results.push(newPerson);
         })

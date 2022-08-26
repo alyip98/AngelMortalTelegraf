@@ -102,11 +102,18 @@ class Person {
         this.diet = false
         this.angel = null;
         this.mortal = null;
+        this.major = "";
         return this;
     }
 
     getIntro() {
-        return `hey! your mortal is ${this.name.trim()}`
+        return `Your mortal is ${this.name}!
+Room 🏠: ${this.roomNum}
+${this.pranked ? "Can prank ✅" : "Pls don't prank ❌"}
+Major 🎓: ${this.major}
+2 truths and a lie 🙊:
+${this.twoTruths}
+Dietary requirements 🍴: ${this.diet}`
     }
 
     getIntroForMortal() {
