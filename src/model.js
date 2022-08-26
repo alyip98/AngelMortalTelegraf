@@ -107,17 +107,17 @@ class Person {
     }
 
     getIntro() {
-        return `Your mortal is ${this.name}!
+        return escapeMD(`Your mortal is ${this.name}!
 Room 🏠: ${this.roomNum}
 ${this.pranked ? "Can prank ✅" : "Pls don't prank ❌"}
 Major 🎓: ${this.major}
 2 truths and a lie 🙊:
 ${this.twoTruths}
-Dietary requirements 🍴: ${this.diet}`.replace("<", "\\<")
+Dietary requirements 🍴: ${this.diet}`)
     }
 
     getIntroForMortal() {
-        return "I can't tell you who your angel is but here's a hint (one of these statements is false):\n" + this.twoTruths.replace("<", "\\<")
+        return escapeMD("I can't tell you who your angel is but here's a hint (one of these statements is false):\n" + this.twoTruths)
     }
 
     withName(name) {
@@ -153,6 +153,15 @@ Dietary requirements 🍴: ${this.diet}`.replace("<", "\\<")
         });
         return person
     }
+}
+
+function escapeMD(text) {
+    const specialChars = ['_', '*', '[', ']', '(', ')', '~', '`', '>',
+        '#', '+', '-', '=', '|', '{', '}', '.', '!']
+    specialChars.forEach(
+        c => text = text.replace(c, "\\"+c)
+    )
+    return text
 }
 
 module.exports = {Model, Person}
