@@ -34,12 +34,12 @@ RegisterSuccessHandler = async (ctx) => {
 
     if (angel.isRegistered()) {
         await ctx.model.mortalBot.telegram.sendMessage(angel.telegramId, messages.RegisteredNotifier('mortal'))
-        await ctx.model.mortalBot.telegram.sendMessage(angel.telegramId, person.getIntro(), {parse_mode: "HTML"})
+        await ctx.model.mortalBot.telegram.sendMessage(angel.telegramId, person.getIntro(), {parse_mode: "MarkdownV2"})
     }
 
     if (mortal.isRegistered()) {
         await ctx.model.angelBot.telegram.sendMessage(mortal.telegramId, messages.RegisteredNotifier('angel'))
-        await ctx.model.angelBot.telegram.sendMessage(mortal.telegramId, person.getIntroForMortal(), {parse_mode: "HTML"})
+        await ctx.model.angelBot.telegram.sendMessage(mortal.telegramId, person.getIntroForMortal(), {parse_mode: "MarkdownV2"})
     }
 }
 
@@ -152,7 +152,7 @@ StatusHandler = async (ctx) => {
     const person = ctx.person
     const model = ctx.model
     const mortal = model.getPersonByUuid(person.mortal)
-    ctx.reply(mortal.getIntro(), {parse_mode: "HTML"})
+    ctx.reply(mortal.getIntro(), {parse_mode: "MarkdownV2"})
 }
 
 AngelHandler = async (ctx) => {
@@ -162,7 +162,7 @@ AngelHandler = async (ctx) => {
     const person = ctx.person
     const model = ctx.model
     const angel = model.getPersonByUuid(person.angel)
-    ctx.reply(angel.getIntroForMortal(), {parse_mode: "HTML"})
+    ctx.reply(angel.getIntroForMortal(), {parse_mode: "MarkdownV2"})
 }
 
 HelpHandler = async (ctx) => {
