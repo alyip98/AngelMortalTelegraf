@@ -107,7 +107,7 @@ class Person {
     }
 
     getIntro() {
-        return escapeMD(`Your mortal is ${this.name}!
+        return escapeHtml(`Your mortal is ${this.name}!
 Room 🏠: ${this.roomNum}
 ${this.pranked ? "Can prank ✅" : "Pls don't prank ❌"}
 Major 🎓: ${this.major}
@@ -117,7 +117,7 @@ Dietary requirements 🍴: ${this.diet}`)
     }
 
     getIntroForMortal() {
-        return escapeMD("I can't tell you who your angel is but here's a hint (one of these statements is false):\n" + this.twoTruths)
+        return escapeHtml("I can't tell you who your angel is but here's a hint (one of these statements is false):\n" + this.twoTruths)
     }
 
     withName(name) {
@@ -153,6 +153,15 @@ Dietary requirements 🍴: ${this.diet}`)
         });
         return person
     }
+}
+
+function escapeHtml(unsafe)
+{
+    return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
 }
 
 function escapeMD(text) {
