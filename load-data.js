@@ -58,7 +58,7 @@ async function main() {
             results.forEach(p => model.addPerson(p))
             model.generateUuids()
 
-            model.setupAMRefs(5)
+            model.setupAMRefs()
 
             model.saveToStorage()
 
