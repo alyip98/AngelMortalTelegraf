@@ -4,6 +4,24 @@ const {TryRegister, RegisterSuccessHandler, RegisterFailedHandler} = require("./
 const {Person} = require('./model');
 const {Telegraf} = require('telegraf');
 
+const { createLogger, format, transports } = require('winston');
+
+const logger = createLogger({
+    level: 'info',
+    format: format.combine(
+        format.timestamp({
+            format: 'YYYY-MM-DD HH:mm:ss'
+        }),
+        format.errors({ stack: true }),
+        format.splat(),
+        format.json()
+    ),
+    defaultMeta: { service: process.env.SERVICE_NAME },
+    transports: [
+        new transports.File({ filename: 'error.log', level: 'error' }),
+    ]
+});
+
 
 CodeFilter = Telegraf.hears(/^\d{9}$/m, async (ctx) => {
     if (ctx.isRegistered) {
@@ -67,7 +85,7 @@ ErrorHandler = async (ctx, next) => {
     try {
         await next()
     } catch (e) {
-        Telegraf.log(console.error)(ctx, ()=>console.error(e))
+        logger.error(e)
     }
 }
 
