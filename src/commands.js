@@ -161,7 +161,7 @@ AngelHandler = async (ctx) => {
     }
     const person = ctx.person
     const model = ctx.model
-    const angel = model.getPersonByUuid(person.mortal)
+    const angel = model.getPersonByUuid(person.angel)
     ctx.reply(angel.getIntroForMortal(), {parse_mode: "HTML"})
 }
 
