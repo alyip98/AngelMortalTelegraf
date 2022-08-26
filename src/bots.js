@@ -30,6 +30,7 @@ async function start(model) {
         bot.use(Middleware.RequireRegister)
         bot.command(['deregister', 'd'], Commands.DeregisterHandler)
         bot.command('mortal', Commands.StatusHandler)
+        bot.command('angel', Commands.AngelHandler)
         bot.on('sticker', Commands.StickerHandler)
         bot.on('photo', Commands.PhotoHandler)
         bot.on('video', Commands.VideoHandler)

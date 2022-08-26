@@ -117,7 +117,7 @@ Dietary requirements 🍴: ${this.diet}`
     }
 
     getIntroForMortal() {
-        return ""
+        return "I can't tell you who your angel is but here's a hint (one of these statements is false):\n" + this.twoTruths
     }
 
     withName(name) {

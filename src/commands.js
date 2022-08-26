@@ -153,8 +153,16 @@ StatusHandler = async (ctx) => {
     const model = ctx.model
     const mortal = model.getPersonByUuid(person.mortal)
     ctx.reply(mortal.getIntro(), {parse_mode: "HTML"})
-    // let mortalName = mortal.name
-    // ctx.reply(messages.StatusMessage(person.name, mortalName))
+}
+
+AngelHandler = async (ctx) => {
+    if (!ctx.isRegistered) {
+        return ctx.reply(messages.RegisterReminder)
+    }
+    const person = ctx.person
+    const model = ctx.model
+    const angel = model.getPersonByUuid(person.mortal)
+    ctx.reply(angel.getIntroForMortal(), {parse_mode: "HTML"})
 }
 
 HelpHandler = async (ctx) => {
@@ -188,5 +196,6 @@ module.exports = {
     PhotoHandler,
     VideoHandler,
     VideoNoteHandler,
-    VoiceHandler
+    VoiceHandler,
+    AngelHandler
 }
