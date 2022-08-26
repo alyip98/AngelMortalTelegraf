@@ -85,7 +85,7 @@ ErrorHandler = async (ctx, next) => {
     try {
         await next()
     } catch (e) {
-        logger.error(e)
+        logger.error(e, ctx)
     }
 }
 
