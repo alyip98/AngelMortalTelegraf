@@ -1,0 +1,35 @@
+{
+  "key": "data",
+  "value": [
+    {
+      "uuid": "543300491",
+      "name": "a",
+      "username": "",
+      "og": "",
+      "telegramId": "",
+      "angel": "643953985",
+      "mortal": "522999324",
+      "facts": []
+    },
+    {
+      "uuid": "522999324",
+      "name": "b",
+      "username": "",
+      "og": "",
+      "telegramId": "",
+      "angel": "543300491",
+      "mortal": "643953985",
+      "facts": []
+    },
+    {
+      "uuid": "643953985",
+      "name": "c",
+      "username": "",
+      "og": "",
+      "telegramId": "",
+      "angel": "522999324",
+      "mortal": "543300491",
+      "facts": []
+    }
+  ]
+}

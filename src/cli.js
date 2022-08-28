@@ -111,51 +111,61 @@ async function Announce(model) {
 
 // loadpaired data.txt FROM EXCEL
 async function loadPaired(workbook, model) {
-    //TODO: Write down the legend to the columns of the excel sheet
     worksheet = workbook.worksheets[0]
-    // Row 1 is the headers
-    row = worksheet.getRow(2)
-    playerName = row.getCell('A').value
-    console.log(playerName)
-    if (model.getPersonByName(playerName)) {
-        console.error("Error: The name " + playerName + " is already used!");
-        return;
-    }
-    row.eachCell(function(cell, colNumber) {
-        console.log('Cell ' + colNumber + ' = ' + cell.value)
-    })
+    worksheet.eachRow(function(row, rowNumber) {
+        // Row 1 is the headers
+        if (rowNumber == 1) {
+            return
+        }
+        const angelName = row.getCell('A').value
+        if (model.getPersonByName(angelName)) {
+            console.error("Error: The angel's name " + angelName + " is already used!");
+            return;
+        }
+        if (angelName == "") {
+            console.error("Error: The name at rowNumber " + rowNumber + " is empty!");
+            return;
+        }
+        const newPerson = new Person().withName(angelName)
+        model.addPerson(newPerson)
+        console.log(newPerson.name + " - " + newPerson.uuid);
+    });
 
-    // content.split("\n").forEach(line => {
-    //     const name = line.split(",")[0].trim()
-    //     if (model.getPersonByName(name)) {
-    //         console.error("Error: name " + name + " is already used!");
-    //         return;
-    //     }
-    //     if (name !== "") {
-    //         const newPerson = new Person().withName(name)
-    //         model.addPerson(newPerson)
-    //         console.log(newPerson.name + " - " + newPerson.uuid);
-    //     }
-    // })
-    // //TODO: print new uuids
-
-    // content.split("\n").forEach(line => {
-    //     if (line.trim() === "") {
-    //         return;
-    //     }
-    //     const angelName = line.split(",")[0].trim()
-    //     const mortalName = line.split(",")[1].trim()
-    //     if (angelName === "" || mortalName === "") {
-    //         console.error("Invalid line: " + line)
-    //     } else {
-    //         console.log(`${angelName}-${mortalName}`)
-    //         const angel = model.getPersonByName(angelName)
-    //         const mortal = model.getPersonByName(mortalName)
-    //         // console.log(a, m)
-    //         angel.mortal = mortal.uuid
-    //         mortal.angel = angel.uuid
-    //     }
-    // })
+    worksheet.eachRow(function(row, rowNumber) {
+        if (rowNumber == 1) {
+            return
+        }
+        const angelName = row.getCell('A').value
+        const angel = model.getPersonByName(angelName)
+        row.eachCell(function(cell, colNumber) {
+            // console.log('Cell ' + colNumber + ' = ' + cell.value)
+            // First column contains angelName
+            if (colNumber == 1) {
+                return
+            }
+            // Cell contains mortal name
+            if (colNumber == 2) {
+                const mortalName = cell.value;
+                if (mortalName === "") {
+                    console.error(`Invalid mortal name at row ${rowNumber}, col ${colNumber}`);
+                    return;
+                }
+                console.log(`${angelName}-${mortalName}`)
+                const mortal = model.getPersonByName(mortalName)
+                // console.log(a, m)
+                angel.mortal = mortal.uuid
+                mortal.angel = angel.uuid
+                return;
+            }
+            // Cell contains fun fact about the person
+            if (colNumber > 2 && colNumber < 8) {
+                angel.facts.push(cell.value)
+                return
+            }
+            console.error(`Error: Unexpected value at row: ${rowNumber}, col: ${colNumber}`);
+        })
+        // console.log(angel)
+    });
 }
 
 function loadCircular(content) {
@@ -175,10 +185,10 @@ function loadCircular(content) {
 async function LoadCommand(path, paired = false, model) {
     console.log(`Loading data from ${path}`)
     // const content = fs.readFileSync(path, {encoding: "utf8"});
-    const workbook = new ExcelJS.Workbook();
-    await workbook.xlsx.readFile(path)
+    const content = new ExcelJS.Workbook();
+    await content.xlsx.readFile(path)
 
-    paired ? loadPaired(workbook, model) : loadCircular(content)
+    paired ? loadPaired(content, model) : loadCircular(content)
 }
 
 async function ListAll(model, ...args) {

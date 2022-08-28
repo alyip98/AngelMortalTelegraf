@@ -113,6 +113,7 @@ class Person {
         this.telegramId = ""
         this.angel = null;
         this.mortal = null;
+        this.facts = [];
         return this;
     }
 
@@ -149,6 +150,7 @@ class Person {
             telegramId: this.telegramId,
             angel: this.angel || null,
             mortal: this.mortal || null,
+            facts: this.facts
         }
     }
 
@@ -161,7 +163,7 @@ class Person {
         person.telegramId = obj.telegramId
         person.angel = obj.angel
         person.mortal = obj.mortal
-
+        person.facts = obj.facts
         return person
     }
 }
