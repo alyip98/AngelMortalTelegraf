@@ -14,6 +14,28 @@ class Model {
         this.people = [];
     }
 
+    resetConfirm() {
+        console.log("Resetting Confirm!")
+        this.people.forEach((person) => {
+            person.confirm = false;
+        })
+        this.saveToStorage()
+    }
+
+    resetConfirmAtMidnight() {
+        // Reset every midnight
+        var now = new Date()
+        var night = new Date()
+        night.setDate(new Date().getDate() + 1)
+        night.setHours(0, 0, 0, 0)
+        var msToMidnight = night.getTime() - now.getTime();
+
+        setTimeout(() => {
+            this.resetConfirm();
+            this.resetConfirmAtMidnight();
+        }, msToMidnight);
+    }
+
     addPerson(person) {
         person.uuid = this.generateNewUuid();
         this.people.push(person);

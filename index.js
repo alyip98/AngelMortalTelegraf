@@ -13,6 +13,7 @@ function setupCLI() {
 async function main() {
     const model = await Model.loadFromStorage()
     model.saveToStorage()
+    model.resetConfirmAtMidnight()
     server.start(model);
     readline.on('line', cli.InputHandler(model));
 
