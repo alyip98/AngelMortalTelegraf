@@ -114,6 +114,7 @@ class Person {
         this.angel = null;
         this.mortal = null;
         this.facts = [];
+        this.confirm = false;
         return this;
     }
 
@@ -135,6 +136,7 @@ class Person {
     deregister() {
         this.telegramId = "";
         this.username = "";
+        this.confirm = false;
     }
 
     isRegistered() {
@@ -150,7 +152,8 @@ class Person {
             telegramId: this.telegramId,
             angel: this.angel || null,
             mortal: this.mortal || null,
-            facts: this.facts
+            facts: this.facts,
+            confirm: this.confirm
         }
     }
 
@@ -164,6 +167,7 @@ class Person {
         person.angel = obj.angel
         person.mortal = obj.mortal
         person.facts = obj.facts
+        person.confirm = obj.confirm
         return person
     }
 }
