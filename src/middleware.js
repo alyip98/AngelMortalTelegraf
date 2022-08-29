@@ -80,6 +80,7 @@ Settings = (isAngel = true, otherBot) => async (ctx, next) => {
     ctx.otherBot = otherBot
     ctx.chatTarget = isAngel ? "Angel" : "Mortal"
     ctx.chatAs = isAngel ? "Mortal" : "Angel"
+    //TODO Add dates for theme days
 
     await next()
 }

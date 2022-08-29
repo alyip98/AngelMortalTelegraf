@@ -30,6 +30,8 @@ async function start(model) {
         bot.use(Middleware.RequireRegister)
         bot.command(['deregister', 'd'], Commands.DeregisterHandler)
         bot.command('mortal', Commands.StatusHandler)
+        bot.command('confirm', Commands.ConfirmHandler)
+        bot.command('doubleconfirm', Commands.DoubleConfirmHandler)
         bot.on('sticker', Commands.StickerHandler)
         bot.on('photo', Commands.PhotoHandler)
         bot.on('video', Commands.VideoHandler)
@@ -40,6 +42,10 @@ async function start(model) {
         bot.on('message', Commands.MessageHandler)
         //TODO: handle sending files
         bot.launch().then(() => console.log(bot._name + " started")).catch(console.error)
+
+        // Enable graceful stop
+        process.once('SIGINT', () => bot.stop('SIGINT'));
+        process.once('SIGTERM', () => bot.stop('SIGTERM'));
     })
 }
 

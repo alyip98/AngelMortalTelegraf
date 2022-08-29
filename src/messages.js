@@ -18,4 +18,8 @@ module.exports = {
     RegisteredNotifier: (chatTarget) => `Your ${chatTarget} has registered with the bot on Telegram. Happy chatting!`,
     UnregisteredNotifier: (chatTarget) => `Your ${chatTarget} has not registered with the bot on Telegram. We'll let you know once they've registered!`,
     NotRegistered: "Not registered",
+    AskToDoubleConfirm: (isAngel) => isAngel ? "You are about to confirm that your angel has done a prank/gift according to today's theme!\n\nIf this is the case, please type in /doubleconfirm to double confirm." : "You are about to confirm that you have done a prank/gift according to today's theme!\n\nIf this is the case, please type in /doubleconfirm to double confirm.",
+    AskOtherToConfirm: (isAngel) => isAngel ? "Thanks for confirming! Please get your angel to confirm as well!" : "Thanks for confirming! Please get your mortal to confirm as well!",
+    BothHaveConfirmed: (isAngel, fact) => isAngel ? "Both you and your angel have confirmed the themed prank/gift! A fun fact about your angel's angel has been sent to them :)" : `Both you and your mortal have confirmed the themed prank/gift! Here is a fact about your angel:\n\n${fact}`,
+    AlreadyConfirmed: "You have already confirmed for today!"
 };

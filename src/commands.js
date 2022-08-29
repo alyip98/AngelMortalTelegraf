@@ -78,6 +78,50 @@ DeregisterHandler = async (ctx) => {
     await ctx.otherBot.telegram.sendMessage(telegramId, messages.DeregisterSuccess)
 }
 
+ConfirmHandler = async (ctx) => {
+    if (!ctx.isRegistered) {
+        return ctx.reply(messages.NotRegistered)
+    }
+    var person = ctx.person
+    if (person.confirm) {
+        return ctx.reply(messages.AlreadyConfirmed)
+    }
+    await ctx.reply(messages.AskToDoubleConfirm(ctx.isAngel))
+}
+
+DoubleConfirmHandler = async (ctx) => {
+    if (!ctx.isRegistered) {
+        return ctx.reply(messages.NotRegistered)
+    }
+    const model = ctx.model
+    var person = ctx.person
+    if (person.confirm) {
+        await ctx.reply(messages.AlreadyConfirmed)
+        return;
+    }
+    person.confirm = true
+    model.saveToStorage()
+    const target = ctx.isAngel ? ctx.angel : ctx.mortal
+    if (!target.isRegistered()) {
+        await ctx.reply(messages.UnregisteredTarget(ctx.chatTarget))
+        return
+    }
+
+    // Check if both have confirmed
+    // TODO Give different fact according to when the party presses confirm
+    if (target.confirm) {
+        const angel = ctx.isAngel ? target : person
+        const mortal = ctx.isAngel ? person : target
+        const angelsAngel = ctx.model.getPersonByUuid(angel.angel)
+        const fact = angelsAngel.facts[0]
+        await ctx.model.mortalBot.telegram.sendMessage(angel.telegramId, messages.BothHaveConfirmed(false, fact))
+        await ctx.model.angelBot.telegram.sendMessage(mortal.telegramId, messages.BothHaveConfirmed(true, null))
+    } else {
+        await ctx.reply(messages.AskOtherToConfirm(ctx.isAngel))
+    }
+
+}
+
 AnimationHandler = async (ctx) => {
     const target = ctx.isAngel ? ctx.angel : ctx.mortal
     if (!target.isRegistered()) {
@@ -221,4 +265,6 @@ module.exports = {
     VoiceHandler,
     AnimationHandler,
     DocumentHandler,
+    ConfirmHandler,
+    DoubleConfirmHandler
 }
