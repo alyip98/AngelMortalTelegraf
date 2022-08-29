@@ -18,9 +18,12 @@ module.exports = {
     RegisteredNotifier: (chatTarget) => `Your ${chatTarget} has registered with the bot on Telegram. Happy chatting!`,
     UnregisteredNotifier: (chatTarget) => `Your ${chatTarget} has not registered with the bot on Telegram. We'll let you know once they've registered!`,
     NotRegistered: "Not registered",
-    AskToDoubleConfirm: (isAngel) => isAngel ? "You are about to confirm that your angel has done a prank/gift according to today's theme!\n\nIf this is the case, please type in /doubleconfirm to double confirm." : "You are about to confirm that you have done a prank/gift according to today's theme!\n\nIf this is the case, please type in /doubleconfirm to double confirm.",
-    AskOtherToConfirm: (isAngel) => isAngel ? `Thanks for confirming! Your  has not confirmed yet, we have messaged them to do so!` : "Thanks for confirming! Your mortal has not confirmed yet, we have messaged them to do so!",
-    // SendOtherToConfirm
+    AskToDoubleConfirm: (isAngel) => `You are about to confirm that ${isAngel ? "your Angel has" : "you have"} done a prank/gift according to today's theme!\n\nIf this is the case, please type in /doubleconfirm to double confirm.`,
+    WillGetOtherToConfirm: (isAngel) => `Thanks for confirming! Your ${isAngel ? "Angel" : "Mortal"} has not confirmed yet, we have messaged them to do so!`,
+    AskOtherToConfirm: (isAngel) => `Your ${isAngel ? "Angel" : "Mortal"} has confirmed a themed prank/gift. Please /confirm on your end to validate this!`,
     BothHaveConfirmed: (isAngel, fact) => isAngel ? "Both you and your angel have confirmed the themed prank/gift! A fun fact about your angel's angel has been sent to them :)" : `Both you and your mortal have confirmed the themed prank/gift! Here is a fact about your angel:\n\n${fact}`,
-    AlreadyConfirmed: "You have already confirmed for today!"
+    AlreadyConfirmed: "You have already confirmed for today!",
+    // TODO: Change the Developer according to who is in charge now
+    GeneralError: "Something went wrong :(. Please show this to the developer, Praveen (@praveeeenk)",
+    FactIndexError: (factIndex) => `Something went wrong :(. Please show this to the developer, Praveen (@praveeeenk).\n\nFact Index: ${factIndex}`
 };

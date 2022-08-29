@@ -98,26 +98,38 @@ DoubleConfirmHandler = async (ctx) => {
     if (person.confirm) {
         return ctx.reply(messages.AlreadyConfirmed)
     }
+    //TODO: REMOVE THESE TWO LINES
     person.confirm = true
     model.saveToStorage()
-    const target = ctx.isAngel ? ctx.angel : ctx.mortal
-    if (!target.isRegistered()) {
+
+    const other = ctx.isAngel ? ctx.angel : ctx.mortal
+    if (!other.isRegistered()) {
         return ctx.reply(messages.UnregisteredTarget(ctx.chatTarget))
     }
 
     // Check if both have confirmed
-    // TODO Give different fact according to when the party presses confirm
-    if (!target.confirm) {
-        await ctx.reply(messages.AskOtherToConfirm(ctx.isAngel))
-        await ctx.otherBot.telegram.sendMessage(target.telegramId, messages.AskOtherToConfirm(ctx.isAngel))
+    if (!other.confirm) {
+        await ctx.reply(messages.WillGetOtherToConfirm(ctx.isAngel))
+        await ctx.otherBot.telegram.sendMessage(other.telegramId, messages.AskOtherToConfirm(!ctx.isAngel))
         return
     }
-    const angel = ctx.isAngel ? target : person
-    const mortal = ctx.isAngel ? person : target
+    // Both have confirmed, give out fact
+    const angel = ctx.isAngel ? other : person
+    const mortal = ctx.isAngel ? person : other
     const angelsAngel = ctx.model.getPersonByUuid(angel.angel)
-    const fact = angelsAngel.facts[0]
+    const date = new Date()
+    // const dayMonthArr = [date.getDate(), (date.getMonth() + 1)]
+    const checkDayMonth = (dayMonthArr) => date.getDate() == dayMonthArr[0] && (date.getMonth() + 1) == dayMonthArr[1]
+    const factIndex = ctx.themeDays.findIndex(checkDayMonth)
+    if (factIndex == -1) {
+        return ctx.reply(messages.FactIndexError(factIndex))
+    }
+    const fact = angelsAngel.facts[factIndex]
     await ctx.model.mortalBot.telegram.sendMessage(angel.telegramId, messages.BothHaveConfirmed(false, fact))
     await ctx.model.angelBot.telegram.sendMessage(mortal.telegramId, messages.BothHaveConfirmed(true, null))
+
+    person.confirm = true
+    model.saveToStorage()
 }
 
 AnimationHandler = async (ctx) => {
