@@ -2,6 +2,7 @@ const Commands = require("./commands");
 const {Model} = require("./model");
 const Middleware = require("./middleware");
 const {Telegraf} = require('telegraf');
+const {onModelReload} = require("./events");
 require('dotenv').config();
 
 async function start(model) {

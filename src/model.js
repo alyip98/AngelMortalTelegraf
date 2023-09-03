@@ -57,6 +57,15 @@ class Model {
         return model
     }
 
+    async reloadFromStorage() {
+        const data = await storage.defaultInstance.get('data')
+        try {
+            this.people = data.map(item => Person.fromJson(item))
+        } catch (e) {
+            console.log(`couldn't load data from storage, creating fresh data`)
+        }
+    }
+
     saveToStorage() {
         this.store.setItem('data', this.toJson())
     }
@@ -97,23 +106,14 @@ class Person {
         this.name = ""
         this.roomNum = ""
         this.telegramId = ""
-        this.pranked = false
-        this.twoTruths = false
-        this.diet = false
+        this.intro = ""
         this.angel = null;
         this.mortal = null;
-        this.major = "";
         return this;
     }
 
-    getIntro() {
-        return escapeHtml(`Your mortal is ${this.name}!
-Room 🏠: ${this.roomNum}
-${this.pranked ? "Can prank ✅" : "Pls don't prank ❌"}
-Major 🎓: ${this.major}
-2 truths and a lie 🙊:
-${this.twoTruths}
-Dietary requirements 🍴: ${this.diet}`)
+    getIntroForAngel() {
+        return escapeHtml(this.intro)
     }
 
     getIntroForMortal() {
