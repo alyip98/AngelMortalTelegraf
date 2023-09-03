@@ -113,7 +113,7 @@ class Person {
     }
 
     getIntroForAngel() {
-        return escapeHtml(this.intro)
+        return `Your mortal is ${this.name}!\nRoom 🏠: ${this.roomNum}\n${escapeHtml(this.intro)}`
     }
 
     getIntroForMortal() {

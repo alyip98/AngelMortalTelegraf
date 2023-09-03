@@ -34,7 +34,6 @@ RegisterSuccessHandler = async (ctx) => {
 
     if (angel.isRegistered()) {
         await ctx.model.mortalBot.telegram.sendMessage(angel.telegramId, messages.RegisteredNotifier('mortal'))
-        await ctx.model.mortalBot.telegram.sendMessage(angel.telegramId, "Here's a short intro from them:")
         await ctx.model.mortalBot.telegram.sendMessage(angel.telegramId, person.getIntroForAngel(), {parse_mode: "HTML"})
     }
 
