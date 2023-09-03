@@ -102,13 +102,13 @@ Settings = (isAngel=true, otherBot) => async(ctx, next) => {
     await next()
 }
 
-TelegramIDWhitelist = async (ctx, next) => {
-    const telegramId = ctx.from.id;
-    if (process.env.ADMIN_BOT_WHITELIST.indexOf(telegramId) === -1) {
-        console.log(`${telegramId} not authorized`)
+UsernameWhitelist = async (ctx, next) => {
+    const username = ctx.from.username;
+    if (process.env.ADMIN_BOT_WHITELIST.indexOf(username) === -1) {
+        console.log(`${username} not authorized`)
         return ctx.reply("not authorized!")
     }
     await next()
 }
 
-module.exports = {UserId, OnlyPrivate, ErrorHandler, RequireRegister, WithModel, Settings, CodeFilter, TelegramIDWhitelist}
+module.exports = {UserId, OnlyPrivate, ErrorHandler, RequireRegister, WithModel, Settings, CodeFilter, UsernameWhitelist}

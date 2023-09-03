@@ -19,8 +19,8 @@ async function start(model) {
     adminBot.use(Middleware.ErrorHandler,
         Middleware.WithModel(model),
         Middleware.OnlyPrivate,
-        Middleware.TelegramIDWhitelist,
-        )
+        Middleware.UsernameWhitelist,
+    )
 
 
     adminBot.command("test", async ctx => {
@@ -28,7 +28,6 @@ async function start(model) {
     })
 
     adminBot.command("list", async ctx => {
-        console.log(cli)
         const out = await cli.ListAll(model)
         return ctx.reply(out)
     })
