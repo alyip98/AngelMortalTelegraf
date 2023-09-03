@@ -19,6 +19,7 @@ async function start(model) {
     adminBot.use(Middleware.ErrorHandler,
         Middleware.WithModel(model),
         Middleware.OnlyPrivate,
+        Middleware.TelegramIDWhitelist,
         )
 
 

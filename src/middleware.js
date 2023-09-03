@@ -16,7 +16,7 @@ const logger = createLogger({
         format.splat(),
         format.json()
     ),
-    defaultMeta: { service: process.env.SERVICE_NAME },
+    defaultMeta: { service: process.env.LOGGING_SERVICE_NAME },
     transports: [
         new transports.File({ filename: 'error.log', level: 'error' }),
     ]
@@ -102,4 +102,13 @@ Settings = (isAngel=true, otherBot) => async(ctx, next) => {
     await next()
 }
 
-module.exports = {UserId, OnlyPrivate, ErrorHandler, RequireRegister, WithModel, Settings, CodeFilter}
+TelegramIDWhitelist = async (ctx, next) => {
+    const telegramId = ctx.from.id;
+    if (process.env.ADMIN_BOT_WHITELIST.indexOf(telegramId) === -1) {
+        console.log(`${telegramId} not authorized`)
+        return ctx.reply("not authorized!")
+    }
+    await next()
+}
+
+module.exports = {UserId, OnlyPrivate, ErrorHandler, RequireRegister, WithModel, Settings, CodeFilter, TelegramIDWhitelist}
