@@ -57,6 +57,15 @@ class Model {
         return model
     }
 
+    async reloadFromStorage() {
+        const data = await storage.defaultInstance.get('data')
+        try {
+            this.people = data.map(item => Person.fromJson(item))
+        } catch (e) {
+            console.log(`couldn't load data from storage, creating fresh data`)
+        }
+    }
+
     saveToStorage() {
         this.store.setItem('data', this.toJson())
     }
@@ -97,20 +106,18 @@ class Person {
         this.name = ""
         this.roomNum = ""
         this.telegramId = ""
-        this.pranked = false
-        this.twoTruths = false
-        this.diet = false
+        this.intro = ""
         this.angel = null;
         this.mortal = null;
         return this;
     }
 
-    getIntro() {
-        return `hey! your mortal is ${this.name.trim()}`
+    getIntroForAngel() {
+        return `Your mortal is ${this.name}!\nRoom 🏠: ${this.roomNum}\n${escapeHtml(this.intro)}`
     }
 
     getIntroForMortal() {
-        return ""
+        return escapeHtml("I can't tell you who your angel is but here's a hint (one of these statements is false):\n" + this.twoTruths)
     }
 
     withName(name) {
@@ -146,6 +153,24 @@ class Person {
         });
         return person
     }
+}
+
+function escapeHtml(unsafe)
+{
+    return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+}
+
+function escapeMD(text) {
+    const specialChars = ['_', '*', '[', ']', '(', ')', '~', '`', '>',
+        '#', '+', '-', '=', '|', '{', '}', '.', '!']
+    specialChars.forEach(
+        c => text = text.replace(c, "\\"+c)
+    )
+    return text
 }
 
 module.exports = {Model, Person}

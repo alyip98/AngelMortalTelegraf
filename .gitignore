@@ -1,7 +1,9 @@
 data
 data.txt
 data.*
+data*
 .idea
+*.csv
 
 # Logs
 logs

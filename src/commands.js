@@ -34,12 +34,12 @@ RegisterSuccessHandler = async (ctx) => {
 
     if (angel.isRegistered()) {
         await ctx.model.mortalBot.telegram.sendMessage(angel.telegramId, messages.RegisteredNotifier('mortal'))
-        await ctx.model.mortalBot.telegram.sendMessage(angel.telegramId, person.getIntro(), {parse_mode: "HTML"})
+        await ctx.model.mortalBot.telegram.sendMessage(angel.telegramId, person.getIntroForAngel(), {parse_mode: "HTML"})
     }
 
     if (mortal.isRegistered()) {
         await ctx.model.angelBot.telegram.sendMessage(mortal.telegramId, messages.RegisteredNotifier('angel'))
-        await ctx.model.angelBot.telegram.sendMessage(mortal.telegramId, person.getIntroForMortal(), {parse_mode: "HTML"})
+        // await ctx.model.angelBot.telegram.sendMessage(mortal.telegramId, person.getIntroForMortal(), {parse_mode: "HTML"})
     }
 }
 
@@ -152,9 +152,17 @@ StatusHandler = async (ctx) => {
     const person = ctx.person
     const model = ctx.model
     const mortal = model.getPersonByUuid(person.mortal)
-    ctx.reply(mortal.getIntro(), {parse_mode: "HTML"})
-    // let mortalName = mortal.name
-    // ctx.reply(messages.StatusMessage(person.name, mortalName))
+    return ctx.reply(mortal.getIntroForAngel(), {parse_mode: "HTML"})
+}
+
+AngelHandler = async (ctx) => {
+    if (!ctx.isRegistered) {
+        return ctx.reply(messages.RegisterReminder)
+    }
+    const person = ctx.person
+    const model = ctx.model
+    const angel = model.getPersonByUuid(person.angel)
+    // return ctx.reply(angel.getIntroForMortal(), {parse_mode: "HTML"})
 }
 
 HelpHandler = async (ctx) => {
@@ -174,6 +182,10 @@ StartHandler = async (ctx) => {
     }
 }
 
+AdminHandler = async (ctx) => {
+
+}
+
 module.exports = {
     RegisterHandler,
     DeregisterHandler,
@@ -188,5 +200,7 @@ module.exports = {
     PhotoHandler,
     VideoHandler,
     VideoNoteHandler,
-    VoiceHandler
+    VoiceHandler,
+    AngelHandler,
+    AdminHandler,
 }

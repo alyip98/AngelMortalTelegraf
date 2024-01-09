@@ -4,6 +4,24 @@ const {TryRegister, RegisterSuccessHandler, RegisterFailedHandler} = require("./
 const {Person} = require('./model');
 const {Telegraf} = require('telegraf');
 
+const { createLogger, format, transports } = require('winston');
+
+const logger = createLogger({
+    level: 'info',
+    format: format.combine(
+        format.timestamp({
+            format: 'YYYY-MM-DD HH:mm:ss'
+        }),
+        format.errors({ stack: true }),
+        format.splat(),
+        format.json()
+    ),
+    defaultMeta: { service: process.env.LOGGING_SERVICE_NAME },
+    transports: [
+        new transports.File({ filename: 'error.log', level: 'error' }),
+    ]
+});
+
 
 CodeFilter = Telegraf.hears(/^\d{9}$/m, async (ctx) => {
     if (ctx.isRegistered) {
@@ -67,7 +85,10 @@ ErrorHandler = async (ctx, next) => {
     try {
         await next()
     } catch (e) {
-        Telegraf.log(console.error)(ctx, ()=>console.error(e))
+        logger.error({
+            "error": e,
+            "context": ctx.update
+        })
     }
 }
 
@@ -81,4 +102,13 @@ Settings = (isAngel=true, otherBot) => async(ctx, next) => {
     await next()
 }
 
-module.exports = {UserId, OnlyPrivate, ErrorHandler, RequireRegister, WithModel, Settings, CodeFilter}
+UsernameWhitelist = async (ctx, next) => {
+    const username = ctx.from.username;
+    if (process.env.ADMIN_BOT_WHITELIST.indexOf(username) === -1) {
+        console.log(`${username} not authorized`)
+        return ctx.reply("not authorized!")
+    }
+    await next()
+}
+
+module.exports = {UserId, OnlyPrivate, ErrorHandler, RequireRegister, WithModel, Settings, CodeFilter, UsernameWhitelist}

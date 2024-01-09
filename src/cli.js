@@ -134,10 +134,13 @@ async function ListAll(model, ...args) {
     } else {
         console.log(out)
     }
+    return out
 }
 
 async function Dump(model) {
-    console.log(model.dumpUuids())
+    const out = model.dumpUuids()
+    console.log(out)
+    return out
 }
 
-module.exports = {InputHandler, LoadCommand}
+module.exports = {InputHandler, ListAll, Dump, Rename}

@@ -2,6 +2,7 @@ const Commands = require("./commands");
 const {Model} = require("./model");
 const Middleware = require("./middleware");
 const {Telegraf} = require('telegraf');
+const {onModelReload} = require("./events");
 require('dotenv').config();
 
 async function start(model) {
@@ -23,19 +24,21 @@ async function start(model) {
     const bots = [angelBot, mortalBot]
 
     bots.forEach(bot => {
-        bot.use(Middleware.WithModel(model), Middleware.ErrorHandler, Middleware.OnlyPrivate, Middleware.UserId, Middleware.CodeFilter)
+        bot.use(Middleware.ErrorHandler, Middleware.WithModel(model), Middleware.OnlyPrivate, Middleware.UserId, Middleware.CodeFilter)
         bot.start(Commands.StartHandler)
         bot.help(Commands.HelpHandler)
         bot.command(['register', 'r'], Commands.RegisterHandler)
         bot.use(Middleware.RequireRegister)
         bot.command(['deregister', 'd'], Commands.DeregisterHandler)
         bot.command('mortal', Commands.StatusHandler)
+        bot.command('angel', Commands.AngelHandler)
         bot.on('sticker', Commands.StickerHandler)
         bot.on('photo', Commands.PhotoHandler)
         bot.on('video', Commands.VideoHandler)
         bot.on('voice', Commands.VoiceHandler)
         bot.on('video_note', Commands.VideoNoteHandler)
         bot.on('message', Commands.MessageHandler)
+        bot.catch(console.error)
         bot.launch().then(() => console.log(bot._name + " started")).catch(console.error)
     })
 }
