@@ -1,4 +1,5 @@
 const storage = require('node-persist');
+
 storage.init({
     'dir': 'data',
     stringify: s => Buffer.from(JSON.stringify(s)).toString('base64'),
@@ -97,6 +98,19 @@ class Model {
 
     copy(other) {
         this.people = other.people
+    }
+
+    setupCustomAMRefs() {
+        this.people.forEach((p) => {
+            const mortalName = p['mortalName']
+            const mortal = this.people.find((p2) => p2.name === mortalName)
+            if (!mortal) {
+                throw new Error(`Could not find person with name=${mortalName} for angel=${p.name}`)
+            }
+            // console.log(`Paired ${p.name} -> ${mortal.name}`);
+            p.mortal = mortal.uuid;
+            mortal.angel = p.uuid;
+        })
     }
 }
 

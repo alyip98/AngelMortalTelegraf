@@ -10,7 +10,7 @@
   "author": "Alfred Yip",
   "license": "ISC",
   "dependencies": {
-    "csv-parser": "^3.0.0",
+    "csv-parser": "^3.2.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "node-persist": "^3.1.0",

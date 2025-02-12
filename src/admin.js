@@ -4,7 +4,7 @@ const Middleware = require("./middleware");
 const {Telegraf} = require('telegraf');
 const https = require('https'); // or 'https' for https:// URLs
 const fs = require('fs');
-const {load} = require("../load-data");
+const {load} = require("./load-data");
 const cli = require("./cli");
 
 

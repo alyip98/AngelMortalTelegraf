@@ -1,9 +1,9 @@
 const {Telegraf} = require("telegraf");
 
-const {Model} = require("./src/model");
+const {Model} = require("./model");
 const csv = require('csv-parser')
 const fs = require('fs')
-const {Person} = require("./src/model");
+const {Person} = require("./model");
 require('dotenv').config();
 
 
@@ -13,9 +13,10 @@ async function load(path) {
 
     return new Promise(resolve => {
         fs.createReadStream(path)
-            .pipe(csv(["name", "roomNum", "intro"]))
+            .pipe(csv(["name", "roomNum", "intro", "mortalName"]))
             .on('data', (data) => {
                 if (data.name === "Name") return
+                console.log(data)
                 const newPerson = new Person();
                 for (const key in data) {
                     if (!data.hasOwnProperty(key) || key === "_") continue
@@ -32,14 +33,14 @@ async function load(path) {
             .on('end', () => {
 
                 /* Randomize array in-place using Durstenfeld shuffle algorithm */
-                // function shuffleArray(array) {
-                //     for (var i = array.length - 1; i > 0; i--) {
-                //         var j = Math.floor(Math.random() * (i + 1));
-                //         var temp = array[i];
-                //         array[i] = array[j];
-                //         array[j] = temp;
-                //     }
-                // }
+                function shuffleArray(array) {
+                    for (var i = array.length - 1; i > 0; i--) {
+                        var j = Math.floor(Math.random() * (i + 1));
+                        var temp = array[i];
+                        array[i] = array[j];
+                        array[j] = temp;
+                    }
+                }
                 // shuffleArray(results)
 
                 const msg = results.map(p => p.name)
@@ -56,7 +57,8 @@ async function load(path) {
                 results.forEach(p => model.addPerson(p))
                 model.generateUuids()
 
-                model.setupAMRefs()
+                model.setupCustomAMRefs()
+                // model.setupAMRefs()
 
                 model.saveToStorage()
                 resolve()
